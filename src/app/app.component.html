@@ -1,0 +1,249 @@
+<div class="min-h-screen flex flex-col bg-gray-50/50 font-sans">
+  
+  <!-- 1. Cabecera Comercial -->
+  <app-header></app-header>
+  
+  <!-- 2. Contenedor Principal con Hero de Alto Impacto -->
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-20">
+    
+    <!-- SECCIÓN HERO PRINCIPAL -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Columna Izquierda: Mensaje Persuasivo de Venta (Copywriting) -->
+      <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+        <div class="inline-flex items-center space-x-2 bg-orange-50 border border-orange-100 px-3 py-1.5 rounded-full">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+          </span>
+          <span class="text-xs font-extrabold text-orange-600 tracking-wide uppercase">Taller Activo • Envíos a todo el Perú 🇵🇪</span>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-none">
+          Dale vida a tus ideas en <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">Calidad Premium</span>
+        </h1>
+        
+        <p class="text-base sm:text-lg text-gray-500 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
+          Sube tus fotos, memes o artes favoritos y diséñalos en tiempo real. Polos de Algodón Pima, Cuadros de Aluminio HD e Imanes personalizados con acabado fotorrealista de alta resistencia.
+        </p>
+        
+        <!-- Botones de Acción Inmediata Redimensionados -->
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+          <button (click)="abrirSimulador('prod-polo-pima')" class="w-full sm:w-auto bg-gray-900 hover:bg-orange-600 text-white font-bold text-sm uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg transition-all duration-300 transform active:scale-95 cursor-pointer">
+            ✨ Probar Simulador
+          </button>
+        </div>
+
+        <!-- Mini Características -->
+        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-gray-100 max-w-md mx-auto lg:mx-0">
+          <div class="text-center lg:text-left">
+            <span class="block text-xl sm:text-2xl font-black text-gray-900">100%</span>
+            <span class="text-[11px] font-bold text-gray-400 uppercase">Algodón Pima</span>
+          </div>
+          <div class="text-center lg:text-left">
+            <span class="block text-xl sm:text-2xl font-black text-gray-900">HD+</span>
+            <span class="text-[11px] font-bold text-gray-400 uppercase">Estampado DTF</span>
+          </div>
+          <div class="text-center lg:text-left">
+            <span class="block text-xl sm:text-2xl font-black text-gray-900">24h</span>
+            <span class="text-[11px] font-bold text-gray-400 uppercase">Preparación</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Tarjeta Principal Dinámica -->
+      <div class="lg:col-span-6 flex justify-center relative select-none">
+        <div class="absolute w-72 h-72 bg-orange-500/10 rounded-full filter blur-3xl -top-10 -right-10 -z-10 animate-pulse"></div>
+        
+        <!-- Mockup de Prenda con Estampado de Ejemplo Simulado con CSS Moderno -->
+        <div class="bg-white rounded-3xl p-6 shadow-2xl shadow-gray-200/60 border border-gray-100 max-w-sm w-full relative group transform transition-transform duration-300 hover:-translate-y-2">
+          <div class="w-full aspect-square bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center relative mb-4 border border-gray-100">
+            <!-- Icono base de la prenda -->
+            <span class="text-[140px] relative z-10 transition-transform duration-300 group-hover:scale-105">👕</span>
+            <!-- Gráfico superpuesto imitando el estampado (Llama la atención de jóvenes) -->
+            <div class="absolute inset-0 flex items-center justify-center z-20 pt-4 pointer-events-none">
+              <div class="bg-gradient-to-tr from-purple-600 via-pink-500 to-orange-400 text-white font-black text-[10px] tracking-widest px-4 py-2 rounded-lg shadow-md uppercase rotate-12 transform scale-110 border border-white/20">
+                ANIME GENERATION
+              </div>
+            </div>
+            <span class="absolute top-3 right-3 bg-orange-600 text-white font-extrabold text-[9px] uppercase px-2.5 py-1 rounded-md tracking-wider z-30">Más Vendido 🔥</span>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold text-orange-600 uppercase tracking-wider block">Prenda Personalizada</span>
+              <h3 class="font-black text-gray-900 text-base">Polo Oversize Urban</h3>
+              <p class="text-xs text-gray-400 font-bold">S/. 45.00</p>
+            </div>
+            <button class="bg-gray-900 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg hover:bg-orange-600 transition-colors shadow-xs">
+              🚀
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN: VITRINA DE PRODUCTOS QUE IMPACTAN -->
+    <div class="space-y-6">
+      <div class="text-center lg:text-left">
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">¿Qué puedes crear hoy en HazloTú?</h2>
+        <p class="text-sm text-gray-400 font-medium">Explora los productos favoritos de nuestra comunidad peruana.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Tarjeta 1: Cuadros de Aluminio HD -->
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
+          <div>
+            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
+              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">🖼️</span>
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent flex items-end p-3 z-20">
+                <span class="text-white text-[11px] font-extrabold uppercase tracking-wide">Retratos Familiares en Alta Fidelidad</span>
+              </div>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">Aluminio HD</span>
+            </div>
+            <h3 class="font-extrabold text-gray-900 text-sm">Cuadros de Aluminio Fotográfico</h3>
+            <p class="text-xs text-gray-400 mt-1 mb-3">Dale brillo eterno a tus recuerdos familiares. Resistente al agua y decoloración.</p>
+          </div>
+          <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
+            <span class="text-xs font-black text-gray-900">Desde S/. 60.00</span>
+            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-cuadro-aluminio')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+                Diseñar →
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: Fotos Imantadas -->
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
+          <div>
+            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
+              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">🧲</span>
+              <div class="absolute inset-0 flex items-center justify-center gap-2 p-4 rotate-3 z-20">
+                <div class="bg-white p-1 shadow-xs transform -rotate-6 border border-gray-200 text-[8px] font-bold text-center">
+                  <div class="w-10 h-10 bg-amber-400 mb-1 flex items-center justify-center">🎮</div>
+                  Geek
+                </div>
+                <div class="bg-white p-1 shadow-xs transform rotate-12 border border-gray-200 text-[8px] font-bold text-center">
+                  <div class="w-10 h-10 bg-purple-400 mb-1 flex items-center justify-center">🐱</div>
+                  Memes
+                </div>
+              </div>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">Packs Magnéticos</span>
+            </div>
+            <h3 class="font-extrabold text-gray-900 text-sm">Pack de Fotos Imanes Decorativos</h3>
+            <p class="text-xs text-gray-400 mt-1 mb-3">Decora tu refri con tus fotos de viajes, series favoritas o las mejores plantillas de memes.</p>
+          </div>
+          <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
+            <span class="text-xs font-black text-gray-900">Desde S/. 25.00</span>
+            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-pack-imanes')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+                Diseñar →
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 3: Ropa de Bebé Algodón Pima CORREGIDA -->
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
+          <div>
+            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
+              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">👶</span>
+              <div class="absolute inset-0 flex items-center justify-center z-20 pt-10 pointer-events-none">
+                <div class="bg-cyan-500 text-white font-extrabold text-[8px] tracking-wide px-2 py-1 rounded-sm shadow-xs uppercase -rotate-6">
+                  FUTURO CRACK
+                </div>
+              </div>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">100% Pima</span>
+            </div>
+            <h3 class="font-extrabold text-gray-900 text-sm">Bodys de Algodón Pima para Bebé</h3>
+            <p class="text-xs text-gray-400 mt-1 mb-3">Imprime frases graciosas, tiernas o el escudo de tu equipo sobre el algodón más suave de todos.</p>
+          </div>
+          <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
+            <span class="text-xs font-black text-gray-900">Desde S/. 35.00</span>
+            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-body-bebe')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+                Diseñar →
+              </button>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- NUEVA SECCIÓN DINÁMICA: GALERÍA DE STOCK INTEGRADA -->
+    <!-- ================================================================= -->
+    <section class="pt-4">
+      <app-stock-gallery></app-stock-gallery>
+    </section>    
+        
+    <!-- SECCIÓN: PASOS SIMPLES DE PERSONALIZACIÓN -->
+    <div class="bg-gray-900 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden shadow-xl">
+      <div class="absolute w-64 h-64 bg-orange-600/20 rounded-full filter blur-3xl -bottom-10 -right-10"></div>
+      
+      <div class="max-w-2xl mb-10">
+        <span class="text-xs font-black text-orange-500 uppercase tracking-widest block mb-1">Proceso Automatizado</span>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Estampar tus ideas nunca fue tan fácil</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+        <!-- Paso 1 -->
+        <div class="space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center font-black text-lg shadow-md shadow-orange-600/30">
+            1
+          </div>
+          <h4 class="font-bold text-base text-gray-100">Sube tu Imagen</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Carga cualquier foto, meme o ilustración desde tu celular o computadora. Nuestro sistema procesará la transparencia automáticamente.</p>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center font-black text-lg">
+            2
+          </div>
+          <h4 class="font-bold text-base text-gray-100">Acomoda y Diseña</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Arrastra, escala y rota tu diseño sobre el canvas interactivo de la prenda. Elige la talla peruana y tu color favorito en tiempo real.</p>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center font-black text-lg">
+            3
+          </div>
+          <h4 class="font-bold text-base text-gray-100">Recibe en Casa</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Paga de forma segura mediante Yape/Plin o Tarjeta. Nosotros nos encargamos del estampado fotorrealista HD y del flete a nivel nacional.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL POPUP FLOTANTE PREMIUM DEL SIMULADOR INTEGRADO -->
+  <!-- ================================================================= -->
+  @if (isCustomizerOpen()) {
+    <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+      <div class="bg-white rounded-3xl w-full max-w-5xl shadow-2xl border border-gray-100 relative max-h-[90vh] flex flex-col">
+        
+        <!-- Botón de Cierre "X" en la esquina superior -->
+        <button (click)="cerrarSimulador()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 hover:bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center font-black text-sm cursor-pointer z-50">
+          ✕
+        </button>
+
+        <!-- Contenedor Interno Escroleable del Simulador -->
+        <div class="p-6 overflow-y-auto flex-1">
+          <app-customizer></app-customizer>
+        </div>
+
+      </div>
+    </div>
+  }
+  
+  <!-- 3. Pie de Página Corporativo -->
+  <app-footer></app-footer>
+
+</div>

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Configuración obligatoria en v4 para que escanee tus componentes de Angular */
+@source "./app/**/*.{html,ts}";
+
+@theme {
+  /* Color principal de HazloTu.pe (Naranja vibrante de acción) */
+  --color-hazlotu-accent: #ff5a00;
+  /* Color secundario oscuro para textos elegantes y fondos de contraste */
+  --color-hazlotu-dark: #111111;
+}

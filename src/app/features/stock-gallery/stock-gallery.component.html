@@ -1,0 +1,88 @@
+<div class="space-y-8 py-4">
+  
+  <!-- Encabezado del Catálogo -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-100 pb-5">
+    <div>
+      <h2 class="text-2xl font-black text-gray-900 tracking-tight">Catálogo Oficial HazloTú</h2>
+      <p class="text-xs text-gray-400 font-medium">Prendas en stock físico y recursos de impresión listos para despacho express.</p>
+    </div>
+    
+    <!-- Filtros de Pestañas Horizontales -->
+    <div class="flex flex-wrap gap-2 bg-gray-100 p-1 rounded-xl self-start md:self-auto">
+      <button (click)="changeCategory('todos')"
+        [class.bg-white]="activeCategory() === 'todos'"
+        [class.shadow-xs]="activeCategory() === 'todos'"
+        [class.text-gray-900]="activeCategory() === 'todos'"
+        class="px-4 py-2 rounded-lg text-xs font-bold text-gray-500 hover:text-gray-900 transition-all cursor-pointer">
+        Todos
+      </button>
+      <button (click)="changeCategory('prenda')"
+        [class.bg-white]="activeCategory() === 'prenda'"
+        [class.shadow-xs]="activeCategory() === 'prenda'"
+        [class.text-gray-900]="activeCategory() === 'prenda'"
+        class="px-4 py-2 rounded-lg text-xs font-bold text-gray-500 hover:text-gray-900 transition-all cursor-pointer">
+        Prendas
+      </button>
+      <button (click)="changeCategory('cuadro_aluminio')"
+        [class.bg-white]="activeCategory() === 'cuadro_aluminio'"
+        [class.shadow-xs]="activeCategory() === 'cuadro_aluminio'"
+        [class.text-gray-900]="activeCategory() === 'cuadro_aluminio'"
+        class="px-4 py-2 rounded-lg text-xs font-bold text-gray-500 hover:text-gray-900 transition-all cursor-pointer">
+        Cuadros HD
+      </button>
+    </div>
+  </div>
+
+  <!-- Rejilla Dinámica de Productos -->
+  @if (filteredProducts().length > 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (prod of filteredProducts(); track prod.id) {
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between h-full">
+          <div>
+            <!-- Contenedor de Imagen de Miniatura Falsa -->
+            <div class="w-full h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative border border-gray-100">
+              @if (prod.category === 'prenda') {
+                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">👕</span>
+              } @else if (prod.category === 'cuadro_aluminio') {
+                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">🖼️</span>
+              } @else {
+                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">📦</span>
+              }
+              <span class="absolute top-3 right-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md tracking-wider">
+                S/. {{ prod.basePrice | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <!-- Títulos y Textos -->
+            <h3 class="font-extrabold text-gray-900 text-sm tracking-tight mb-1">{{ prod.name }}</h3>
+            <p class="text-xs text-gray-400 leading-relaxed line-clamp-2 mb-4">{{ prod.description }}</p>
+          </div>
+
+          <!-- Botones de Acción de Compra en la base de la tarjeta -->
+          <div class="flex items-center gap-2 border-t border-gray-50 pt-4 mt-auto">
+            <!-- Botón Compra Directa -->
+            <button (click)="comprarDirecto(prod)"
+              class="flex-1 bg-gray-900 hover:bg-hazlotu-accent text-white font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-colors cursor-pointer text-center">
+              🛒 Al Carrito
+            </button>
+            
+            <!-- Opción Alternativa si el producto permite personalización extra -->
+            @if (prod.isCustomizable) {
+              <button (click)="abrirEnSimulador(prod)"
+                class="bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200 p-2.5 rounded-xl transition-colors cursor-pointer"
+                title="Personalizar encima de este modelo">
+                ✨
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Estado de catálogo vacío -->
+    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
+      <p class="text-sm text-gray-400 font-bold">No se encontraron productos en esta categoría de stock.</p>
+    </div>
+  }
+
+</div>

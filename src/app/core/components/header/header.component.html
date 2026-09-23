@@ -1,0 +1,38 @@
+<header class="w-full bg-white shadow-xs border-b border-gray-100 sticky top-0 z-50">
+  <!-- Cintillo de envíos a nivel nacional -->
+  <div class="w-full bg-hazlotu-dark text-white text-[11px] font-bold tracking-widest text-center py-2 uppercase px-4">
+    🚀 Sube tu imagen, diseña tu prenda y recíbela en casa. Envío a todo el Perú.
+  </div>
+
+  <!-- Barra de navegación principal -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    
+    <!-- Contenedor del Logo con Imagen Auténtica -->
+    <div class="flex items-center cursor-pointer select-none">
+      <img 
+        src="assets/images/logo-hazlotu.png" 
+        alt="HazloTu.pe - Personalización de Prendas" 
+        class="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 hover:scale-[1.02]" />
+    </div>
+
+    <!-- Menú de navegación intermedio (Simulado por ahora) -->
+    <nav class="hidden md:flex space-x-8 text-sm font-bold text-gray-600">
+      <a class="text-hazlotu-dark hover:text-hazlotu-accent transition-colors cursor-pointer">Simulador</a>
+      <a class="hover:text-hazlotu-accent transition-colors cursor-pointer">Galería de Stock</a>
+      <a class="hover:text-hazlotu-accent transition-colors cursor-pointer">¿Cómo funciona?</a>
+    </nav>
+
+    <!-- Botón del Carrito Reactivo -->
+    <div class="relative cursor-pointer p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors border border-gray-100">
+      <span class="text-xl">🛒</span>
+      
+      <!-- Contador flotante reactivo acoplado a Angular Signals -->
+      @if (cartService.totalItemsCount() > 0) {
+        <span class="absolute -top-1.5 -right-1.5 bg-hazlotu-accent text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-md">
+          {{ cartService.totalItemsCount() }}
+        </span>
+      }
+    </div>
+
+  </div>
+</header>
