@@ -502,24 +502,23 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
       const imageData = ctx.getImageData(0, 0, width, height);
       const data = imageData.data;
 
-      // Tolerancia equilibrada para la varita mágica
-      const tolerance = 40; 
+      // ⚡ AJUSTE PARA AVIF: Tolerancia aumentada para absorber el ruido de compresión cromática
+      const tolerance = 55; 
       const visited = new Uint8Array(width * height);
       
-      // Lista de puntos iniciales (las 4 esquinas exteriores de la imagen para inundar el fondo)
+      // Lista de las 4 esquinas exteriores de la imagen para iniciar el Flood Fill
       const queue: number[][] = [
         [width - 1, 0],
         [0, height - 1],
         [width - 1, height - 1]
       ];
 
-      // Guardamos los colores base de las esquinas para saber qué estamos borrando
+      // Almacenamos los colores base de las esquinas analizadas
       const startColors = queue.map(([x, y]) => {
         const idx = (y * width + x) * 4;
         return { r: data[idx], g: data[idx + 1], b: data[idx + 2] };
       });
 
-      // Inicializamos las esquinas en la matriz de visitados
       queue.forEach(([x, y]) => {
         visited[y * width + x] = 1;
       });
@@ -529,14 +528,8 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
         const [cx, cy] = queue[head++];
         const currentIdx = (cy * width + cx) * 4;
         
-        const rCur = data[currentIdx];
-        const gCur = data[currentIdx + 1];
-        const bCur = data[currentIdx + 2];
+        data[currentIdx + 3] = 0; // Hacemos transparente el fondo exterior
 
-        // Hacemos el píxel actual transparente ya que es parte del fondo exterior
-        data[currentIdx + 3] = 0;
-
-        // Revisamos los 4 píxeles vecinos (arriba, abajo, izquierda, derecha)
         const neighbors = [
           [cx + 1, cy],
           [cx - 1, cy],
@@ -553,17 +546,18 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
               const gTarget = data[nIdx + 1];
               const bTarget = data[nIdx + 2];
 
-              // Validamos si el vecino se parece al color de fondo de CUALQUIERA de las esquinas
               let match = false;
               for (const startColor of startColors) {
                 const dist = Math.abs(rTarget - startColor.r) + 
                             Math.abs(gTarget - startColor.g) + 
                             Math.abs(bTarget - startColor.b);
-                
-                // O una tolerancia directa para capturar el ajedrez gris/blanco rebelde
-                const isGridGray = Math.abs(rTarget - 204) + Math.abs(gTarget - 204) + Math.abs(bTarget - 204) < 60;
 
-                if (dist < tolerance || isGridGray) {
+                // ⚡ FILTRO INMUNE A COMPRESIÓN AVIF:
+                // Captura de forma matemática cualquier cuadrícula ruidosa gris o blanca alternada por el formato
+                const isGridGray = Math.abs(rTarget - 204) < 45 && Math.abs(gTarget - 204) < 45 && Math.abs(bTarget - 204) < 45;
+                const isGridWhite = rTarget > 215 && gTarget > 215 && bTarget > 215;
+
+                if (dist < tolerance || isGridGray || isGridWhite) {
                   match = true;
                   break;
                 }
@@ -599,7 +593,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
       this.fabricCanvas.fire('object:modified', { target: fabricImage });
 
     } catch (err) {
-      console.error("Error al limpiar el fondo por inundación en Canvas:", err);
+      console.error("Error al limpiar el fondo en Canvas:", err);
     } finally {
       this.isProcessingBg.set(false);
     }
