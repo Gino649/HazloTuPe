@@ -1,4 +1,4 @@
-const handler = async function (req: any, res: any) {
+async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -49,8 +49,11 @@ const handler = async function (req: any, res: any) {
     console.error("Error en Vercel Serverless:", error);
     return res.status(500).json({ error: 'Error procesando la remoción de fondo', details: error.message });
   }
-};
+}
 
-const target: any = globalThis;
-target.module = target.module || {};
-target.module.exports = handler;
+export default handler;
+
+const _global: any = globalThis;
+if (typeof _global['module'] !== 'undefined') {
+  _global['module']['exports'] = handler;
+}
