@@ -1,22 +1,36 @@
-import { removeBackground } from '@imgly/background-removal-node';
+export const config = {
+  runtime: 'edge',
+};
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: any) {
+  // En las Edge Functions, las peticiones usan el estándar nativo Request/Response de la Web
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return new Response(null, { status: 200 });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido. Usa POST' });
+    return new Response(JSON.stringify({ error: 'Método no permitido. Usa POST' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
-    const { imageBase64 } = req.body;
+    const { imageBase64 } = await req.json();
     if (!imageBase64) {
-      return res.status(400).json({ error: 'No se recibió ninguna imagen' });
+      return new Response(JSON.stringify({ error: 'No se recibió ninguna imagen' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
+
+    // Importamos la librería de forma dinámica compatible con el entorno Edge
+    const imglyModule: any = await import('@imgly/background-removal-node');
+    const removeBackground = imglyModule.removeBackground;
 
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
     
+    // Decodificación de Base64 optimizada para entornos Edge estándar
     const binaryString = atob(base64Data);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -26,6 +40,7 @@ export default async function handler(req: any, res: any) {
 
     const imageBlobInput = new Blob([bytes], { type: 'image/png' });
 
+    // La IA procesa el Blob directo en la memoria global optimizada
     const processedBlob = await removeBackground(imageBlobInput, {
       model: 'small',
       output: {
@@ -42,10 +57,16 @@ export default async function handler(req: any, res: any) {
     }
     const outputBase64 = btoa(outputBinary);
     
-    return res.status(200).json({ image: `data:image/png;base64,${outputBase64}` });
+    return new Response(JSON.stringify({ image: `data:image/png;base64,${outputBase64}` }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
 
   } catch (error: any) {
-    console.error("Error en Vercel Serverless:", error);
-    return res.status(500).json({ error: 'Error procesando la remoción de fondo', details: error.message });
+    console.error("Error en Vercel Edge Function:", error);
+    return new Response(JSON.stringify({ error: 'Error procesando la remoción de fondo', details: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

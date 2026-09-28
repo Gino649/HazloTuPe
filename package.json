@@ -1,7 +1,6 @@
 {
   "name": "hazlotu-frontend",
   "version": "0.0.0",
-  "type": "module", 
   "scripts": {
     "ng": "ng",
     "start": "node generar-catalogo.js && ng serve",
