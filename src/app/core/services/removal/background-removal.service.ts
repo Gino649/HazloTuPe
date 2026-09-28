@@ -1,59 +1,27 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { removeBackground } from '@imgly/background-removal-node';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
-import { pathToFileURL } from 'url';
+import { Injectable } from '@angular/core';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 1. CONTROL DE CORS Y PETICIONES PREVIAS (OPTIONS)
-  // El navegador a veces envía un OPTIONS antes del POST real. Si no respondes 200, te clava un 405.
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+@Injectable({
+  providedIn: 'root'
+})
+export class BackgroundRemovalService {
 
-  // 2. FORZAR CONTROL ESTRICTO DE MÉTODOS
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido. Usa POST' });
-  }
-
-  const tempDirectory = os.tmpdir();
-  const tempPath = path.join(tempDirectory, `img_${Date.now()}.png`);
-
-  try {
-    const { imageBase64 } = req.body;
-    if (!imageBase64) {
-      return res.status(400).json({ error: 'No se recibió ninguna imagen' });
-    }
-
-    const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
-    fs.writeFileSync(tempPath, base64Data, 'base64');
-
-    const fileUrlString = pathToFileURL(tempPath).href;
-
-    const processedBlob = await removeBackground(fileUrlString, {
-      model: 'small',
-      output: {
-        format: 'image/png',
-        quality: 0.95
-      }
+  async removeBackgroundLocal(imageBlob: Blob): Promise<string> {
+    const base64String = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      // readAsDataURL genera el prefijo idóneo automáticamente
+      reader.onloadend = () => resolve(reader.result as string); 
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(imageBlob);
     });
 
-    const arrayBuffer = await processedBlob.arrayBuffer();
-    const outputBase64 = Buffer.from(arrayBuffer).toString('base64');
-    
-    return res.status(200).json({ image: `data:image/png;base64,${outputBase64}` });
+    const response = await fetch('/api/remove-bg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64: base64String })
+    });
 
-  } catch (error: any) {
-    console.error("Error en Vercel Serverless:", error);
-    return res.status(500).json({ error: 'Error procesando la remoción de fondo', details: error.message });
-  } finally {
-    if (fs.existsSync(tempPath)) {
-      try {
-        fs.unlinkSync(tempPath);
-      } catch (e) {
-        console.error("No se pudo borrar el archivo temporal:", e);
-      }
-    }
+    if (!response.ok) throw new Error("Error en el servidor");
+    const data = await response.json();
+    return data.image; 
   }
 }
