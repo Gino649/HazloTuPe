@@ -26,8 +26,10 @@ export default async function handler(req, res) {
 
     const imageBlobInput = new Blob([bytes], { type: 'image/png' });
 
+    // 🔥 CONFIGURACIÓN FINAL: Forzamos a la IA a descargar los JSON y modelos desde internet de forma segura
     const processedBlob = await removeBackground(imageBlobInput, {
       model: 'small',
+      publicPath: 'https://staticimgly.com', // 👈 Apunta al CDN oficial de la librería
       output: {
         format: 'image/png',
         quality: 0.95
