@@ -54,6 +54,10 @@
   "overrides": {
     "@angular-devkit/build-angular": {
       "tailwindcss": "$tailwindcss"
-    }
+    },
+    "@imgly/background-removal": {
+      "onnxruntime-web": "1.21.0"
+    },
+    "onnxruntime-web": "1.21.0"
   }
 }
