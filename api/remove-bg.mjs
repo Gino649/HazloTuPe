@@ -1,4 +1,6 @@
-async function handler(req: any, res: any) {
+import { removeBackground } from '@imgly/background-removal-node';
+
+export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -12,9 +14,6 @@ async function handler(req: any, res: any) {
     if (!imageBase64) {
       return res.status(400).json({ error: 'No se recibió ninguna imagen' });
     }
-
-    const imglyModule: any = await (globalThis as any).import('@imgly/background-removal-node');
-    const removeBackground = imglyModule.removeBackground;
 
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
     
@@ -45,16 +44,8 @@ async function handler(req: any, res: any) {
     
     return res.status(200).json({ image: `data:image/png;base64,${outputBase64}` });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error en Vercel Serverless:", error);
     return res.status(500).json({ error: 'Error procesando la remoción de fondo', details: error.message });
   }
-}
-
-export default handler;
-
-const _env: any = globalThis;
-if (typeof _env.module !== 'undefined' || _env['exports'] !== undefined) {
-  const targetModule = _env.module || { exports: {} };
-  targetModule.exports = handler;
 }
