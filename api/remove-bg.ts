@@ -51,5 +51,6 @@ const handler = async function (req: any, res: any) {
   }
 };
 
-(globalThis as any).module = (globalThis as any).module || {};
-(globalThis as any).module.exports = handler;
+const target: any = globalThis;
+target.module = target.module || {};
+target.module.exports = handler;
