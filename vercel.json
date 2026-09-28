@@ -1,6 +1,11 @@
 {
   "version": 2,
   "outputDirectory": "dist/hazlotu-frontend/browser",
+  "functions": {
+    "api/remove-bg.mjs": {
+      "includeFiles": "node_modules/@imgly/background-removal-node/dist/**"
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",

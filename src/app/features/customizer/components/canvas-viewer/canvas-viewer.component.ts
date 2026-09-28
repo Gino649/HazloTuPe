@@ -415,6 +415,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
     }
   }
   
+  /*
   public async processSelectedImageBg() {
     const activeObject = this.fabricCanvas.getActiveObject();
     if (!activeObject || activeObject.type !== 'image' || this.isProcessingBg()) return;
@@ -475,6 +476,134 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
       this.isProcessingBg.set(false);
     }
   }
+  */
+
+  public async processSelectedImageBg(): Promise<void> {
+    const activeObject = this.fabricCanvas.getActiveObject();
+    if (!activeObject || activeObject.type !== 'image' || this.isProcessingBg()) return;
+
+    this.isProcessingBg.set(true);
+    this.showFloatingButton.set(false);
+
+    try {
+      const fabricImage = activeObject as fabric.Image;
+      const htmlImage = fabricImage.getElement() as HTMLImageElement;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+
+      const width = htmlImage.naturalWidth || htmlImage.width;
+      const height = htmlImage.naturalHeight || htmlImage.height;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(htmlImage, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+
+      // Tolerancia equilibrada para la varita mágica
+      const tolerance = 40; 
+      const visited = new Uint8Array(width * height);
+      
+      // Lista de puntos iniciales (las 4 esquinas exteriores de la imagen para inundar el fondo)
+      const queue: number[][] = [
+        [width - 1, 0],
+        [0, height - 1],
+        [width - 1, height - 1]
+      ];
+
+      // Guardamos los colores base de las esquinas para saber qué estamos borrando
+      const startColors = queue.map(([x, y]) => {
+        const idx = (y * width + x) * 4;
+        return { r: data[idx], g: data[idx + 1], b: data[idx + 2] };
+      });
+
+      // Inicializamos las esquinas en la matriz de visitados
+      queue.forEach(([x, y]) => {
+        visited[y * width + x] = 1;
+      });
+
+      let head = 0;
+      while (head < queue.length) {
+        const [cx, cy] = queue[head++];
+        const currentIdx = (cy * width + cx) * 4;
+        
+        const rCur = data[currentIdx];
+        const gCur = data[currentIdx + 1];
+        const bCur = data[currentIdx + 2];
+
+        // Hacemos el píxel actual transparente ya que es parte del fondo exterior
+        data[currentIdx + 3] = 0;
+
+        // Revisamos los 4 píxeles vecinos (arriba, abajo, izquierda, derecha)
+        const neighbors = [
+          [cx + 1, cy],
+          [cx - 1, cy],
+          [cx, cy + 1],
+          [cx, cy - 1]
+        ];
+
+        for (const [nx, ny] of neighbors) {
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            const vIdx = ny * width + nx;
+            if (visited[vIdx] === 0) {
+              const nIdx = vIdx * 4;
+              const rTarget = data[nIdx];
+              const gTarget = data[nIdx + 1];
+              const bTarget = data[nIdx + 2];
+
+              // Validamos si el vecino se parece al color de fondo de CUALQUIERA de las esquinas
+              let match = false;
+              for (const startColor of startColors) {
+                const dist = Math.abs(rTarget - startColor.r) + 
+                            Math.abs(gTarget - startColor.g) + 
+                            Math.abs(bTarget - startColor.b);
+                
+                // O una tolerancia directa para capturar el ajedrez gris/blanco rebelde
+                const isGridGray = Math.abs(rTarget - 204) + Math.abs(gTarget - 204) + Math.abs(bTarget - 204) < 60;
+
+                if (dist < tolerance || isGridGray) {
+                  match = true;
+                  break;
+                }
+              }
+
+              if (match) {
+                visited[vIdx] = 1;
+                queue.push([nx, ny]);
+              }
+            }
+          }
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      const transparentDataUrl = canvas.toDataURL('image/png', 1.0);
+
+      await new Promise<void>((resolve) => {
+        const imgElement = new Image();
+        imgElement.onload = () => {
+          fabricImage.setElement(imgElement);
+          fabricImage.set({
+            width: width,
+            height: height,
+            imageSmoothing: true
+          });
+          resolve();
+        };
+        imgElement.src = transparentDataUrl;
+      });
+      
+      this.fabricCanvas.renderAll();
+      this.fabricCanvas.fire('object:modified', { target: fabricImage });
+
+    } catch (err) {
+      console.error("Error al limpiar el fondo por inundación en Canvas:", err);
+    } finally {
+      this.isProcessingBg.set(false);
+    }
+  }
   /*
   public async processSelectedImageBg() {
     const activeObject = this.fabricCanvas.getActiveObject();
@@ -530,6 +659,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
     }
   } 
   */
+  
   public onPanStart(event: MouseEvent) {
     if (this.zoomLevel() > 1.0 && !this.fabricCanvas.getActiveObject()) {
       this.isPanning = true;
