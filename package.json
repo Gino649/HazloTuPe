@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "node generar-catalogo.js && ng serve",
-    "build": "node generar-catalogo.js && ng build",
+    "prebuild": "node generar-catalogo.js",
+    "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
