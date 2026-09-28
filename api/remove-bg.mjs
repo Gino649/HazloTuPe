@@ -26,10 +26,10 @@ export default async function handler(req, res) {
 
     const imageBlobInput = new Blob([bytes], { type: 'image/png' });
 
-    // 🔥 CONFIGURACIÓN FINAL: Forzamos a la IA a descargar los JSON y modelos desde internet de forma segura
+    // 🔥 ENLACE DE UNPKG INMUTABLE: Descarga las dependencias nativas estructuradas directamente desde npm en internet
     const processedBlob = await removeBackground(imageBlobInput, {
       model: 'small',
-      publicPath: 'https://staticimgly.com', // 👈 Apunta al CDN oficial de la librería
+      publicPath: 'https://unpkg.com',
       output: {
         format: 'image/png',
         quality: 0.95
