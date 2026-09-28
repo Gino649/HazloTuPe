@@ -1,4 +1,4 @@
-<div class="space-y-8 py-4">
+<div class="space-y-8 py-4 animate-fade-in">
   
   <!-- Encabezado del Catálogo -->
   <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-100 pb-5">
@@ -33,48 +33,102 @@
     </div>
   </div>
 
-  <!-- Rejilla Dinámica de Productos -->
+  <!-- 🌟 RESTAURADA TU REJILLA DE 3 PRODUCTOS POR FILA -->
   @if (filteredProducts().length > 0) {
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
       @for (prod of filteredProducts(); track prod.id) {
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between h-full">
+        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between h-full relative">
+          
           <div>
-            <!-- Contenedor de Imagen de Miniatura Falsa -->
-            <div class="w-full h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative border border-gray-100">
-              @if (prod.category === 'prenda') {
-                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">👕</span>
-              } @else if (prod.category === 'cuadro_aluminio') {
-                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">🖼️</span>
-              } @else {
-                <span class="text-7xl group-hover:scale-105 transition-transform duration-300">📦</span>
-              }
-              <span class="absolute top-3 right-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md tracking-wider">
+            <!-- 🌟 LA MINIATURA GRIS AHORA ES EL SLIDER INDIVIDUAL COMPACTO -->
+            <div class="w-full h-36 sm:h-52 bg-gray-50 rounded-xl mb-3 overflow-hidden flex items-center justify-center relative border border-gray-100/70 p-2 sm:p-4 group/slider select-none">
+              
+              <span class="absolute top-2 right-2 bg-gray-900 text-white font-extrabold text-[7px] sm:text-[9px] uppercase px-1.5 sm:px-2 py-0.5 rounded-md tracking-wider z-20 shadow-xs">
                 S/. {{ prod.basePrice | number:'1.2-2' }}
               </span>
+
+              <!-- 🌟 AGREGA ESTE CONTADOR DINÁMICO AQUÍ (Esquina superior izquierda de la miniatura): -->
+              @if (catalogImages()[prod.folderKey] && catalogImages()[prod.folderKey].length > 0) {
+                <span class="absolute top-2 left-2 bg-emerald-600 text-white font-black text-[7px] sm:text-[8px] uppercase px-1.5 sm:px-2 py-0.5 rounded-md tracking-wider sm:tracking-widest z-20 shadow-xs">
+                  🔥 {{ catalogImages()[prod.folderKey].length }} Diseños en Stock
+                </span>
+              } @else {
+                <span class="absolute top-3 left-3 bg-amber-500 text-white font-black text-[8px] uppercase px-2 py-0.5 rounded-md tracking-widest z-20 shadow-xs">
+                  ⚠️ Próximamente
+                </span>
+              }
+
+              @if (catalogImages()[prod.folderKey] && catalogImages()[prod.folderKey].length > 0) {
+                
+                <!-- Botón Flecha Izquierda del Slider -->
+                @if (catalogImages()[prod.folderKey].length > 1) {
+                  <button 
+                    (click)="$event.stopPropagation(); prevImage(prod.folderKey, catalogImages()[prod.folderKey].length)"
+                    class="absolute left-2 bg-white text-gray-900 shadow-md border border-gray-100 rounded-full w-7 h-7 flex items-center justify-center font-black text-xs z-30 transition-all active:scale-90 hover:bg-gray-900 hover:text-white cursor-pointer">
+                    ‹
+                  </button>
+                }
+
+                <!-- Imagen Activa del Catálogo con apertura al Modal HD -->
+                <div 
+                  (click)="openImageModal(catalogImages()[prod.folderKey][getProductIndex(prod.folderKey)], prod.name)"
+                  class="w-full h-full flex items-center justify-center cursor-pointer transition-all transform active:scale-98">
+                  <img 
+                    [src]="catalogImages()[prod.folderKey][getProductIndex(prod.folderKey)]" 
+                    class="max-w-full max-h-[85%] object-contain rounded-lg animate-fade-in" 
+                    alt="Diseño de Stock" />
+                </div>
+
+                <!-- Botón Flecha Derecha del Slider -->
+                @if (catalogImages()[prod.folderKey].length > 1) {
+                  <button 
+                    (click)="$event.stopPropagation(); nextImage(prod.folderKey, catalogImages()[prod.folderKey].length)"
+                    class="absolute right-2 bg-white text-gray-900 shadow-md border border-gray-100 rounded-full w-7 h-7 flex items-center justify-center font-black text-xs z-30 transition-all active:scale-90 hover:bg-gray-900 hover:text-white cursor-pointer">
+                    ›
+                  </button>
+
+                  <!-- Puntitos Indicadores inferiores del Slider -->
+                  <div class="absolute bottom-2 flex gap-1 justify-center z-30">
+                    @for (img of catalogImages()[prod.folderKey]; track $index) {
+                      <div 
+                        class="w-1 h-1 rounded-full transition-all"
+                        [class.bg-gray-900]="getProductIndex(prod.folderKey) === $index"
+                        [class.w-2.5]="getProductIndex(prod.folderKey) === $index"
+                        [class.bg-gray-300]="getProductIndex(prod.folderKey) !== $index">
+                      </div>
+                    }
+                  </div>
+                }
+
+              } @else {
+                <!-- Icono de respaldo si la carpeta de assets está vacía temporalmente -->
+                <div class="flex flex-col items-center justify-center text-center">
+                  @if (prod.category === 'prenda') {
+                    <span class="text-6xl group-hover:scale-105 transition-transform duration-300">👕</span>
+                  } @else if (prod.category === 'cuadro_aluminio') {
+                    <span class="text-6xl group-hover:scale-105 transition-transform duration-300">🖼️</span>
+                  } @else {
+                    <span class="text-6xl group-hover:scale-105 transition-transform duration-300">📦</span>
+                  }
+                </div>
+              }
             </div>
 
-            <!-- Títulos y Textos -->
+            <!-- Títulos y Textos Descriptivos -->
             <h3 class="font-extrabold text-gray-900 text-sm tracking-tight mb-1">{{ prod.name }}</h3>
             <p class="text-xs text-gray-400 leading-relaxed line-clamp-2 mb-4">{{ prod.description }}</p>
           </div>
 
-          <!-- Botones de Acción de Compra en la base de la tarjeta -->
+          <!-- Botones de Acción en la Base de la Tarjeta -->
           <div class="flex items-center gap-2 border-t border-gray-50 pt-4 mt-auto">
-            <!-- Botón Compra Directa -->
-            <button (click)="comprarDirecto(prod)"
-              class="flex-1 bg-gray-900 hover:bg-hazlotu-accent text-white font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-colors cursor-pointer text-center">
-              🛒 Al Carrito
+            <!-- Envía la imagen activa renderizada en el slider para el mensaje de WhatsApp -->
+            <button 
+              (click)="comprarDirecto(prod, catalogImages()[prod.folderKey] ? catalogImages()[prod.folderKey][getProductIndex(prod.folderKey)] : undefined)"
+              class="flex-1 bg-gray-900 hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-colors cursor-pointer text-center">
+              🛒 Pedir por WhatsApp
             </button>
-            
-            <!-- Opción Alternativa si el producto permite personalización extra -->
-            @if (prod.isCustomizable) {
-              <button (click)="abrirEnSimulador(prod)"
-                class="bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200 p-2.5 rounded-xl transition-colors cursor-pointer"
-                title="Personalizar encima de este modelo">
-                ✨
-              </button>
-            }
           </div>
+
         </div>
       }
     </div>
@@ -82,6 +136,28 @@
     <!-- Estado de catálogo vacío -->
     <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
       <p class="text-sm text-gray-400 font-bold">No se encontraron productos en esta categoría de stock.</p>
+    </div>
+  }
+
+  <!-- MODAL INTERACTIVO DE FOTOS EN ALTA RESOLUCIÓN -->
+  @if (isModalOpen() && selectedModalImage()) {
+    <div class="fixed inset-0 bg-gray-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-4" (click)="closeImageModal()">
+      <div class="bg-white rounded-3xl overflow-hidden max-w-[460px] w-full shadow-2xl border border-gray-100 flex flex-col relative max-h-[85vh] animate-scale-in" (click)="$event.stopPropagation()">
+        
+        <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+          <h4 class="text-xs font-black text-gray-900 uppercase tracking-widest truncate max-w-[80%]">{{ selectedModalTitle() }}</h4>
+          <button (click)="closeImageModal()" class="text-gray-400 hover:text-gray-900 font-black text-sm w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200/50 transition-all cursor-pointer">✕</button>
+        </div>
+
+        <div class="p-6 bg-gray-50 flex items-center justify-center flex-1 overflow-hidden min-h-[280px]">
+          <img [src]="selectedModalImage()" class="max-w-full max-h-[50vh] object-contain rounded-2xl shadow-sm animate-fade-in" [alt]="selectedModalTitle()" />
+        </div>
+
+        <div class="p-4 border-t border-gray-100 text-center bg-white">
+          <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Visualizando recurso físico de alta definición</p>
+        </div>
+
+      </div>
     </div>
   }
 

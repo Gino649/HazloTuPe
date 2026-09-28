@@ -16,6 +16,7 @@ export class ProductService {
       isCustomizable: true,
       sizes: ['S', 'M', 'L', 'XL'],
       allowedLocations: ['pecho', 'espalda', 'manga_izq', 'manga_der'],
+      folderKey: "polos",
       boundingBoxes: { pecho: { width: 30, height: 40, top: 80, left: 100 } },
       colors: [
         { code: '#111111', name: 'Negro Absoluto', images: { model3d: 'assets/models/polo_pima.gltf' } },
@@ -35,6 +36,7 @@ export class ProductService {
       isCustomizable: true,
       sizes: ['M', 'L', 'XL'],
       allowedLocations: ['pecho', 'espalda'],
+      folderKey: "pique",
       boundingBoxes: { pecho: { width: 30, height: 40, top: 80, left: 100 } },
       colors: [
         { code: '#ffffff', name: 'Blanco Piqué', images: { model3d: 'assets/models/polo_pique.gltf' } },
@@ -51,6 +53,7 @@ export class ProductService {
       isCustomizable: true,
       sizes: ['30', '32', '34', '36'],
       allowedLocations: ['muslo_frontal', 'bolsillo_der'],
+      folderKey: "jean",
       boundingBoxes: { muslo_frontal: { width: 20, height: 35, top: 140, left: 120 } },
       colors: [
         { code: '#2b4c7e', name: 'Azul Denim Clásico', images: { model3d: 'assets/models/jean.gltf' } }
@@ -65,6 +68,7 @@ export class ProductService {
       isCustomizable: true,
       sizes: ['S', 'M', 'L'],
       allowedLocations: ['muslo_frontal', 'bolsillo_izq'],
+      folderKey: "shorts",
       boundingBoxes: { muslo_frontal: { width: 18, height: 20, top: 120, left: 90 } },
       colors: [
         { code: '#64748b', name: 'Gris Plomo', images: { model3d: 'assets/models/short.gltf' } }
@@ -82,6 +86,7 @@ export class ProductService {
       isCustomizable: true,
       sizes: ['Estándar (38-43)'],
       allowedLocations: ['manga_izq', 'manga_der'], // Mapeamos lateral izquierdo y derecho en las costuras
+      folderKey: "medias",
       boundingBoxes: { manga_izq: { width: 10, height: 25, top: 50, left: 50 } },
       colors: [
         { code: '#ffffff', name: 'Blanco Urbano', images: { model3d: 'assets/models/medias.gltf' } },
@@ -95,8 +100,9 @@ export class ProductService {
     basePrice: 60.00,
     category:'cuadro_aluminio',
     isCustomizable: true,
-    sizes: ['20x30cm', '30x40cm', '40x60cm'],    
+    sizes: ['20 x 30cm', '30 x 40cm', '40 x 60cm'],    
     allowedLocations: ['lienzo_completo'],
+    folderKey: "laminas",
     boundingBoxes: {},
     colors: [{ code: '#e2e8f0',name: 'Aluminio Natural',images:{} }]    
   },
@@ -105,10 +111,11 @@ export class ProductService {
     name: 'Pack de Fotos Imanes Decorativos',
     description: 'Decora tu refri con tus fotos de viajes, series favoritas o las mejores plantillas de memes.',
     basePrice: 25.00,
-    category:'iman',
+    category:'cuadro_aluminio',
     isCustomizable: true,
     sizes: ['Pack x6', 'Pack x12', 'Pack x24'],
     allowedLocations: ['frente'],
+    folderKey: "imanes",
     boundingBoxes: {},
     colors: [{ code: '#ffffff',name: 'Blanco Fotográfico',images:{} }]
   },
@@ -117,10 +124,11 @@ export class ProductService {
     name: 'Bodys de Algodón Pima para Bebé',
     description: 'Imprime frases graciosas, tiernas o el escudo de tu equipo sobre el algodón más suave de todos.',
     basePrice: 35.00, 
-    category:'bebe',
+    category:'prenda',
     isCustomizable: true,   
     sizes: ['0-3M', '3-6M', '6-9M', '9-12M'],
     allowedLocations: ['pecho', 'espalda'],
+    folderKey: "bebe",
     boundingBoxes: {},
     colors: [
       { code: '#ffffff',name: 'Blanco Bebé', images:{} },

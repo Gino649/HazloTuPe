@@ -1,7 +1,7 @@
 <div class="min-h-screen flex flex-col bg-gray-50/50 font-sans">
   
   <!-- 1. Cabecera Comercial -->
-  <app-header></app-header>
+  <app-header (onNavigate)="procesarNavegacionHeader($event)"></app-header>
   
   <!-- 2. Contenedor Principal con Hero de Alto Impacto -->
   <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-20">
@@ -55,30 +55,77 @@
       <div class="lg:col-span-6 flex justify-center relative select-none">
         <div class="absolute w-72 h-72 bg-orange-500/10 rounded-full filter blur-3xl -top-10 -right-10 -z-10 animate-pulse"></div>
         
-        <!-- Mockup de Prenda con Estampado de Ejemplo Simulado con CSS Moderno -->
-        <div class="bg-white rounded-3xl p-6 shadow-2xl shadow-gray-200/60 border border-gray-100 max-w-sm w-full relative group transform transition-transform duration-300 hover:-translate-y-2">
-          <div class="w-full aspect-square bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center relative mb-4 border border-gray-100">
-            <!-- Icono base de la prenda -->
-            <span class="text-[140px] relative z-10 transition-transform duration-300 group-hover:scale-105">👕</span>
-            <!-- Gráfico superpuesto imitando el estampado (Llama la atención de jóvenes) -->
-            <div class="absolute inset-0 flex items-center justify-center z-20 pt-4 pointer-events-none">
-              <div class="bg-gradient-to-tr from-purple-600 via-pink-500 to-orange-400 text-white font-black text-[10px] tracking-widest px-4 py-2 rounded-lg shadow-md uppercase rotate-12 transform scale-110 border border-white/20">
-                ANIME GENERATION
+        <!-- Contenedor Maestro del Slider con efecto Hover suave -->
+        <div class="bg-white rounded-3xl p-5 shadow-2xl shadow-gray-200/60 border border-gray-100 max-w-sm w-full relative group transform transition-transform duration-300 hover:-translate-y-1 flex flex-col justify-between">
+          
+          <!-- 🌟 ÁREA DE LA IMAGEN PROMOCIONAL DINÁMICA -->
+          <div class="w-full aspect-square bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center relative border border-gray-100 p-2">
+            
+            <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-[9px] uppercase px-2.5 py-1 rounded-md tracking-wider z-30 shadow-xs animate-pulse">
+              Oferta Limitada 🔥
+            </span>
+
+            @if (listaPromociones().length > 0) {
+              
+              <!-- Flecha Izquierda (Solo aparece si subiste más de 1 banner promocional) -->
+              @if (listaPromociones().length > 1) {
+                <button 
+                  (click)="anteriorPromo()"
+                  class="absolute left-2 bg-white text-gray-900 shadow-md border border-gray-100 rounded-full w-8 h-8 flex items-center justify-center font-black text-xs z-30 transition-all active:scale-90 hover:bg-gray-900 hover:text-white cursor-pointer select-none">
+                  ‹
+                </button>
+              }
+
+              <!-- Renderizado del Banner Físico Actual -->
+              <img 
+                [src]="listaPromociones()[promoIndexActivo()]" 
+                class="max-w-full max-h-[90%] object-contain rounded-xl animate-fade-in" 
+                alt="Promoción Especial HazloTú" />
+
+              <!-- Flecha Derecha -->
+              @if (listaPromociones().length > 1) {
+                <button 
+                  (click)="siguientePromo()"
+                  class="absolute right-2 bg-white text-gray-900 shadow-md border border-gray-100 rounded-full w-8 h-8 flex items-center justify-center font-black text-xs z-30 transition-all active:scale-90 hover:bg-gray-900 hover:text-white cursor-pointer select-none">
+                  ›
+                </button>
+
+                <!-- Puntitos de navegación en la parte inferior del banner -->
+                <div class="absolute bottom-2 flex gap-1 justify-center z-30">
+                  @for (img of listaPromociones(); track $index) {
+                    <div 
+                      class="w-1.5 h-1.5 rounded-full transition-all"
+                      [class.bg-orange-600]="promoIndexActivo() === $index"
+                      [class.w-3.5]="promoIndexActivo() === $index"
+                      [class.bg-gray-300]="promoIndexActivo() !== $index">
+                    </div>
+                  }
+                </div>
+              }
+
+            } @else {
+              <!-- Placeholder animado por si se está subiendo código a Vercel o la carpeta está vacía -->
+              <div class="flex flex-col items-center justify-center text-center p-4">
+                <span class="text-5xl animate-bounce mb-2">🎁</span>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Indexando promociones express...</p>
               </div>
-            </div>
-            <span class="absolute top-3 right-3 bg-orange-600 text-white font-extrabold text-[9px] uppercase px-2.5 py-1 rounded-md tracking-wider z-30">Más Vendido 🔥</span>
+            }
           </div>
           
-          <div class="flex items-center justify-between">
+          <!-- Sección de Textos Informativos de la base -->
+          <div class="flex items-center justify-between mt-2">
             <div>
-              <span class="text-[10px] font-bold text-orange-600 uppercase tracking-wider block">Prenda Personalizada</span>
-              <h3 class="font-black text-gray-900 text-base">Polo Oversize Urban</h3>
-              <p class="text-xs text-gray-400 font-bold">S/. 45.00</p>
+              <span class="text-[10px] font-bold text-orange-600 uppercase tracking-wider block">Campañas Especiales</span>
+              <h3 class="font-black text-gray-900 text-sm">Combos & Descuentos de Temporada</h3>
+              <p class="text-[11px] text-gray-400 font-medium leading-tight mt-0.5">Explora las mejores tarifas exclusivas para la comunidad peruana.</p>
             </div>
-            <button class="bg-gray-900 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg hover:bg-orange-600 transition-colors shadow-xs">
-              🚀
+            <button 
+              (click)="siguientePromo()"
+              class="bg-gray-900 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-base hover:bg-orange-600 transition-colors shadow-xs shrink-0 ml-3">
+              ➡️
             </button>
           </div>
+
         </div>
       </div>
 
@@ -96,20 +143,25 @@
         <!-- Tarjeta 1: Cuadros de Aluminio HD -->
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
           <div>
-            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
-              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">🖼️</span>
-              <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent flex items-end p-3 z-20">
+            <!-- Contenedor con la foto de láminas sublimadas de fondo -->
+            <div class="w-full h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative p-3">
+          
+              <!-- 🌟 CAMBIADO: object-cover por object-contain para encajar la imagen completa sin recortes -->
+              <img src="assets/images/laminas-sublinar.png" class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 z-10" alt="Cuadros de Aluminio" />
+              
+              <!-- Franja de gradiente y textos ajustados para armonizar con el fondo -->
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent flex items-end p-3 z-20 h-16">
                 <span class="text-white text-[11px] font-extrabold uppercase tracking-wide">Retratos Familiares en Alta Fidelidad</span>
               </div>
-              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">Aluminio HD</span>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30 shadow-xs">Aluminio HD</span>
             </div>
             <h3 class="font-extrabold text-gray-900 text-sm">Cuadros de Aluminio Fotográfico</h3>
             <p class="text-xs text-gray-400 mt-1 mb-3">Dale brillo eterno a tus recuerdos familiares. Resistente al agua y decoloración.</p>
           </div>
           <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
             <span class="text-xs font-black text-gray-900">Desde S/. 60.00</span>
-            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
-              <button (click)="abrirSimulador('prod-cuadro-aluminio')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+            <span class="text-xs font-bold text-orange-600 transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-cuadro-aluminio')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer transform active:scale-95">
                 Diseñar →
               </button>
             </span>
@@ -119,52 +171,49 @@
         <!-- Tarjeta 2: Fotos Imantadas -->
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
           <div>
-            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
-              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">🧲</span>
-              <div class="absolute inset-0 flex items-center justify-center gap-2 p-4 rotate-3 z-20">
-                <div class="bg-white p-1 shadow-xs transform -rotate-6 border border-gray-200 text-[8px] font-bold text-center">
-                  <div class="w-10 h-10 bg-amber-400 mb-1 flex items-center justify-center">🎮</div>
-                  Geek
-                </div>
-                <div class="bg-white p-1 shadow-xs transform rotate-12 border border-gray-200 text-[8px] font-bold text-center">
-                  <div class="w-10 h-10 bg-purple-400 mb-1 flex items-center justify-center">🐱</div>
-                  Memes
-                </div>
+            <!-- Contenedor con la foto de imanes de fondo -->
+            <div class="w-full h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative p-3">
+              <!-- 🌟 CAMBIADO: object-contain aplicado de forma exacta -->
+              <img src="assets/images/imanes-catalogo.avif" class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 z-10" alt="Imanes Decorativos" />
+              
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent flex items-end p-3 z-20 h-16">
+                <span class="text-white text-[11px] font-extrabold uppercase tracking-wide">Colección Magnética Creativa</span>
               </div>
-              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">Packs Magnéticos</span>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30 shadow-xs">Packs Magnéticos</span>
             </div>
             <h3 class="font-extrabold text-gray-900 text-sm">Pack de Fotos Imanes Decorativos</h3>
             <p class="text-xs text-gray-400 mt-1 mb-3">Decora tu refri con tus fotos de viajes, series favoritas o las mejores plantillas de memes.</p>
           </div>
           <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
             <span class="text-xs font-black text-gray-900">Desde S/. 25.00</span>
-            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
-              <button (click)="abrirSimulador('prod-pack-imanes')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+            <span class="text-xs font-bold text-orange-600 transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-pack-imanes')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer transform active:scale-95">
                 Diseñar →
               </button>
             </span>
           </div>
         </div>
 
-        <!-- Tarjeta 3: Ropa de Bebé Algodón Pima CORREGIDA -->
+        <!-- Tarjeta 3: Ropa de Bebé Algodón Pima -->
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between h-full">
           <div>
-            <div class="w-full h-48 bg-gray-100 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative">
-              <span class="text-6xl group-hover:scale-110 transition-transform duration-300 z-10">👶</span>
-              <div class="absolute inset-0 flex items-center justify-center z-20 pt-10 pointer-events-none">
-                <div class="bg-cyan-500 text-white font-extrabold text-[8px] tracking-wide px-2 py-1 rounded-sm shadow-xs uppercase -rotate-6">
-                  FUTURO CRACK
-                </div>
+            <!-- Contenedor con la foto del catálogo de bebés de fondo -->
+            <div class="w-full h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center relative p-3">
+              <!-- 🌟 CAMBIADO: object-contain para lucir el set de ropita completo -->
+              <img src="assets/images/catalogo-bebe.jpg" class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 z-10" alt="Bodys de Bebé" />
+              
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent flex items-end p-3 z-20 h-16">
+                <span class="text-white text-[11px] font-extrabold uppercase tracking-wide">Estampado Suave Hipoalergénico</span>
               </div>
-              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30">100% Pima</span>
+              <span class="absolute top-3 left-3 bg-gray-900 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-sm tracking-wider z-30 shadow-xs">100% Pima</span>
             </div>
             <h3 class="font-extrabold text-gray-900 text-sm">Bodys de Algodón Pima para Bebé</h3>
             <p class="text-xs text-gray-400 mt-1 mb-3">Imprime frases graciosas, tiernas o el escudo de tu equipo sobre el algodón más suave de todos.</p>
           </div>
           <div class="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
             <span class="text-xs font-black text-gray-900">Desde S/. 35.00</span>
-            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md hover:bg-orange-600 hover:text-white transition-colors cursor-pointer">
-              <button (click)="abrirSimulador('prod-body-bebe')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer">
+            <span class="text-xs font-bold text-orange-600 transition-colors cursor-pointer">
+              <button (click)="abrirSimulador('prod-body-bebe')" class="px-4 py-2 bg-white hover:bg-orange-500 border border-gray-200 hover:border-orange-500 rounded-lg text-[11px] font-black text-orange-600 hover:text-white transition-all cursor-pointer transform active:scale-95">
                 Diseñar →
               </button>
             </span>
@@ -177,46 +226,65 @@
     <!-- ================================================================= -->
     <!-- NUEVA SECCIÓN DINÁMICA: GALERÍA DE STOCK INTEGRADA -->
     <!-- ================================================================= -->
-    <section class="pt-4">
+    <section class="pt-4" id="catalogoSeccion">
       <app-stock-gallery></app-stock-gallery>
     </section>    
         
     <!-- SECCIÓN: PASOS SIMPLES DE PERSONALIZACIÓN -->
-    <div class="bg-gray-900 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden shadow-xl">
-      <div class="absolute w-64 h-64 bg-orange-600/20 rounded-full filter blur-3xl -bottom-10 -right-10"></div>
+    <div id="pasosSeccion" class="scroll-mt-24 bg-gray-900 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden shadow-xl mt-12">
+      <!-- Círculo difuminado de fondo -->
+      <div class="absolute w-64 h-64 bg-orange-600/20 rounded-full filter blur-3xl -bottom-10 -right-10 pointer-events-none"></div>
       
-      <div class="max-w-2xl mb-10">
-        <span class="text-xs font-black text-orange-500 uppercase tracking-widest block mb-1">Proceso Automatizado</span>
-        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Estampar tus ideas nunca fue tan fácil</h2>
+      <!-- Encabezado de la Sección -->
+      <div class="max-w-2xl mb-12 text-center md:text-left">
+        <span class="text-xs font-black text-orange-500 uppercase tracking-widest block mb-1">Proceso Express Automatizado</span>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-1">Estampar tus ideas nunca fue tan fácil</h2>
+        <p class="text-xs text-gray-400 font-medium mt-1.5 max-w-xl">Sin registros complicados ni carritos eternos. Personaliza tu prenda en minutos y gestiona todo directo desde tu celular.</p>
       </div>
 
+      <!-- Rejilla de Pasos Interactivos (1 columna en celular, 3 en pantallas grandes) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-        <!-- Paso 1 -->
-        <div class="space-y-3">
-          <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center font-black text-lg shadow-md shadow-orange-600/30">
-            1
+        
+        <!-- PASO 1: CREATIVIDAD -->
+        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center justify-between">
+            <!-- Icono contenedor circular con color vivo constante -->
+            <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center text-xl shadow-lg shadow-orange-600/40">
+              🎨
+            </div>
+            <!-- Número de guía minimalista flotante -->
+            <span class="text-3xl font-black text-white/10 group-hover:text-orange-500/20 transition-colors tracking-tighter select-none">01</span>
           </div>
-          <h4 class="font-bold text-base text-gray-100">Sube tu Imagen</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Carga cualquier foto, meme o ilustración desde tu celular o computadora. Nuestro sistema procesará la transparencia automáticamente.</p>
+          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">1. Sube tu Imagen</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Carga cualquier foto, meme o ilustración desde tu celular o computadora. Nuestro sistema procesará la transparencia automáticamente en el lienzo.</p>
         </div>
 
-        <!-- Paso 2 -->
-        <div class="space-y-3">
-          <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center font-black text-lg">
-            2
+        <!-- PASO 2: CONFIRMACIÓN Y COMPRA DIRECTA -->
+        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center justify-between">
+            <!-- El contenedor se enciende por completo con el color de WhatsApp en Hover -->
+            <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-xl transition-all duration-300 group-hover:bg-[#25D366] group-hover:border-[#25D366] group-hover:shadow-lg group-hover:shadow-green-600/30">
+              🚀
+            </div>
+            <span class="text-3xl font-black text-white/10 group-hover:text-green-500/20 transition-colors tracking-tighter select-none">02</span>
           </div>
-          <h4 class="font-bold text-base text-gray-100">Acomoda y Diseña</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Arrastra, escala y rota tu diseño sobre el canvas interactivo de la prenda. Elige la talla peruana y tu color favorito en tiempo real.</p>
+          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">2. Pide por WhatsApp</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Elige tu talla y presiona confirmar. El sistema guardará el mockup en alta definición en tu teléfono y abrirá tu chat enviando los detalles técnicos al instante.</p>
         </div>
 
-        <!-- Paso 3 -->
-        <div class="space-y-3">
-          <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center font-black text-lg">
-            3
+        <!-- PASO 3: DESPACHO EXPRESS -->
+        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center justify-between">
+            <!-- El contenedor se enciende por completo con el color de Despacho en Hover -->
+            <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-xl transition-all duration-300 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:shadow-lg group-hover:shadow-blue-600/30">
+              🛵
+            </div>
+            <span class="text-3xl font-black text-white/10 group-hover:text-blue-500/20 transition-colors tracking-tighter select-none">03</span>
           </div>
-          <h4 class="font-bold text-base text-gray-100">Recibe en Casa</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Paga de forma segura mediante Yape/Plin o Tarjeta. Nosotros nos encargamos del estampado fotorrealista HD y del flete a nivel nacional.</p>
+          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">3. Recibe en Casa</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Coordinamos los últimos detalles por el chat. Nosotros nos encargamos del estampado fotorrealista HD de alta resistencia y del flete veloz a nivel nacional.</p>
         </div>
+
       </div>
     </div>
 
@@ -244,6 +312,6 @@
   }
   
   <!-- 3. Pie de Página Corporativo -->
-  <app-footer></app-footer>
+  <app-footer (onNavigate)="procesarNavegacionHeader($event)"></app-footer>
 
 </div>

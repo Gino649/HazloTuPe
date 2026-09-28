@@ -1,0 +1,202 @@
+{
+  "bebe": [
+    "assets/productos/bebe/beb1.jpg",
+    "assets/productos/bebe/bebe2.jpg",
+    "assets/productos/bebe/bebe3.webp"
+  ],
+  "imanes": [
+    "assets/productos/Imanes/imanes1.png",
+    "assets/productos/Imanes/imanes2.png",
+    "assets/productos/Imanes/imanes3.png"
+  ],
+  "laminas": [
+    "assets/productos/laminas/cuadro1.png",
+    "assets/productos/laminas/cuadro2.png",
+    "assets/productos/laminas/cuadro3.png"
+  ],
+  "medias": [
+    "assets/productos/medias/medias1.jpg",
+    "assets/productos/medias/medias2.jpg",
+    "assets/productos/medias/medias3.jpg"
+  ],
+  "pique": [
+    "assets/productos/pique/pique1.jpg",
+    "assets/productos/pique/pique2.jpg"
+  ],
+  "polos": [
+    "assets/productos/polos/polos1.jpg",
+    "assets/productos/polos/polos2.jpg",
+    "assets/productos/polos/polos3.jpg"
+  ],
+  "jean": [
+    "assets/productos/jean/jean1.jpg",
+    "assets/productos/jean/jean2.jpg",
+    "assets/productos/jean/jean3.webp"
+  ],
+  "shorts": [
+    "assets/productos/shorts/short1.jpg",
+    "assets/productos/shorts/short2.webp"
+  ],
+  "promociones": [
+    "assets/productos/promociones/1pack_polera_polo.png",
+    "assets/productos/promociones/2packmagneticos.jpg",
+    "assets/productos/promociones/3pack_medias.jpg"
+  ],
+  "dtfConfig": {
+    "categorias": [
+      "Todos",
+      "animales",
+      "animes",
+      "deportes",
+      "dibujos",
+      "general",
+      "letras"
+    ],
+    "disenos": [
+      {
+        "id": "animales_cabeza.gorila.avif",
+        "titulo": "cabeza.gorila.avif",
+        "rutaWeb": "assets/dtf/animales/cabeza.gorila.avif",
+        "categoria": "animales"
+      },
+      {
+        "id": "animales_capibara.jpg",
+        "titulo": "capibara.jpg",
+        "rutaWeb": "assets/dtf/animales/capibara.jpg",
+        "categoria": "animales"
+      },
+      {
+        "id": "animales_gato.avif",
+        "titulo": "gato.avif",
+        "rutaWeb": "assets/dtf/animales/gato.avif",
+        "categoria": "animales"
+      },
+      {
+        "id": "animales_leon.png",
+        "titulo": "leon.png",
+        "rutaWeb": "assets/dtf/animales/leon.png",
+        "categoria": "animales"
+      },
+      {
+        "id": "animales_monkeyDTF.jpg",
+        "titulo": "monkeyDTF.jpg",
+        "rutaWeb": "assets/dtf/animales/monkeyDTF.jpg",
+        "categoria": "animales"
+      },
+      {
+        "id": "animes_anime.jpg",
+        "titulo": "anime.jpg",
+        "rutaWeb": "assets/dtf/animes/anime.jpg",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_dtf.png",
+        "titulo": "dtf.png",
+        "rutaWeb": "assets/dtf/animes/dtf.png",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_goku.jpg",
+        "titulo": "goku.jpg",
+        "rutaWeb": "assets/dtf/animes/goku.jpg",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_goku2.jpg",
+        "titulo": "goku2.jpg",
+        "rutaWeb": "assets/dtf/animes/goku2.jpg",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_goku3.jpg",
+        "titulo": "goku3.jpg",
+        "rutaWeb": "assets/dtf/animes/goku3.jpg",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_luffi.webp",
+        "titulo": "luffi.webp",
+        "rutaWeb": "assets/dtf/animes/luffi.webp",
+        "categoria": "animes"
+      },
+      {
+        "id": "animes_transformer.jpg",
+        "titulo": "transformer.jpg",
+        "rutaWeb": "assets/dtf/animes/transformer.jpg",
+        "categoria": "animes"
+      },
+      {
+        "id": "deportes_horness.webp",
+        "titulo": "horness.webp",
+        "rutaWeb": "assets/dtf/deportes/horness.webp",
+        "categoria": "deportes"
+      },
+      {
+        "id": "deportes_messi-ronaldo.png",
+        "titulo": "messi ronaldo.png",
+        "rutaWeb": "assets/dtf/deportes/messi-ronaldo.png",
+        "categoria": "deportes"
+      },
+      {
+        "id": "deportes_messi.webp",
+        "titulo": "messi.webp",
+        "rutaWeb": "assets/dtf/deportes/messi.webp",
+        "categoria": "deportes"
+      },
+      {
+        "id": "deportes_messi3.jpg",
+        "titulo": "messi3.jpg",
+        "rutaWeb": "assets/dtf/deportes/messi3.jpg",
+        "categoria": "deportes"
+      },
+      {
+        "id": "dibujos_bart.jpg",
+        "titulo": "bart.jpg",
+        "rutaWeb": "assets/dtf/dibujos/bart.jpg",
+        "categoria": "dibujos"
+      },
+      {
+        "id": "dibujos_bugbony.jpg",
+        "titulo": "bugbony.jpg",
+        "rutaWeb": "assets/dtf/dibujos/bugbony.jpg",
+        "categoria": "dibujos"
+      },
+      {
+        "id": "dibujos_panteraRosa.jpg",
+        "titulo": "panteraRosa.jpg",
+        "rutaWeb": "assets/dtf/dibujos/panteraRosa.jpg",
+        "categoria": "dibujos"
+      },
+      {
+        "id": "dibujos_tomYerry.jpg",
+        "titulo": "tomYerry.jpg",
+        "rutaWeb": "assets/dtf/dibujos/tomYerry.jpg",
+        "categoria": "dibujos"
+      },
+      {
+        "id": "general_banda.jpg",
+        "titulo": "banda.jpg",
+        "rutaWeb": "assets/dtf/general/banda.jpg",
+        "categoria": "general"
+      },
+      {
+        "id": "general_galeria3.webp",
+        "titulo": "galeria3.webp",
+        "rutaWeb": "assets/dtf/general/galeria3.webp",
+        "categoria": "general"
+      },
+      {
+        "id": "letras_letras.jpg",
+        "titulo": "letras.jpg",
+        "rutaWeb": "assets/dtf/letras/letras.jpg",
+        "categoria": "letras"
+      },
+      {
+        "id": "letras_letras2.jpg",
+        "titulo": "letras2.jpg",
+        "rutaWeb": "assets/dtf/letras/letras2.jpg",
+        "categoria": "letras"
+      }
+    ]
+  }
+}

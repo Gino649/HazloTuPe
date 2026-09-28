@@ -26,6 +26,18 @@
           placeholder="Ej: 'El logo del frente quiero que vaya chico en el pecho izquierdo' o 'La frase de las medias que se imprima solo en la cara externa'..."
           class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-orange-500 transition-colors resize-none leading-relaxed"></textarea>
       </div>
+
+      <!-- BOTÓN DE COMPRA DIRECTA POR WHATSAPP EN TU VISTA DE CLIENTES -->
+      <div class="w-full max-w-[550px] mt-4">
+        <button 
+          (click)="triggerWhatsAppCheckout()"
+          class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-[11px] font-black uppercase tracking-wider py-4 rounded-xl shadow-lg cursor-pointer transition-all text-center flex items-center justify-center gap-2 transform active:scale-95 z-30">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://w3.org">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.079 11.948.079c3.173.001 6.154 1.24 8.396 3.487 2.242 2.246 3.476 5.23 3.475 8.41-.003 6.595-5.339 11.866-11.89 11.866c-2.015-.001-4.004-.515-5.772-1.493L0 24zm6.09-4.379l.38.225c1.58.938 3.515 1.433 5.485 1.434 5.514 0 10.003-4.405 10.006-9.822.002-2.624-1.013-5.091-2.863-6.945-1.85-1.855-4.31-2.876-6.93-2.877-5.518 0-10.01 4.407-10.014 9.822-.001 1.948.514 3.85 1.493 5.433l.247.4l-.997 3.637 3.73-.967z"/>
+          </svg>
+          <span>🚀 Descargar Mockup y Confirmar Pedido por WhatsApp</span>
+        </button>
+      </div>
     </div>
 
     <!-- COLUMNA DERECHA: PANEL DE HERRAMIENTAS CORREGIDO (PRECIOS Y TEXTOS VISIBLES) -->
@@ -146,25 +158,7 @@
               }
             </div>
           </div>
-        }
-
-        <!-- 3. TALLA DISPONIBLE -->
-        @if (product.sizes && product.sizes.length > 0) {
-          <div class="space-y-1.5">
-            <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider block">3. Talla Disponible</label>
-            <div class="flex flex-wrap gap-1.5">
-              @for (size of product.sizes; track size) {
-                <button 
-                  (click)="selectedSize.set(size)"
-                  [class.bg-gray-900]="selectedSize() === size"
-                  [class.text-white]="selectedSize() === size"
-                  class="w-9 h-8 border border-gray-200 rounded-lg text-xs font-black flex items-center justify-center transition-colors bg-white text-gray-900 cursor-pointer shadow-2xs">
-                  {{ size }}
-                </button>
-              }
-            </div>
-          </div>
-        }
+        }        
 
         <!-- HERRAMIENTA DE TEXTO PERSONALIZADO -->
         <div class="space-y-2.5 pt-3 border-t border-gray-200">
@@ -200,12 +194,13 @@
           </button>
         </div>
 
-        <!-- Botón Añadir Carrito -->
+        <!-- Botón Añadir Carrito 
         <button 
           (click)="agregarAlCarrito()"
           class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black text-xs uppercase tracking-wider py-3.5 rounded-xl shadow-md transition-all cursor-pointer mt-2 transform active:scale-95">
           🛒 Guardar y Añadir al Carrito
         </button>
+        -->
       }
 
     </div>

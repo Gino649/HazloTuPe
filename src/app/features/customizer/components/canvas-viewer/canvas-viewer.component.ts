@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, OnChanges, SimpleChanges, signal } from '@angular/core';
+import { Component, ElementRef, computed, Input, ViewChild, AfterViewInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as fabric from 'fabric'; 
 import { removeBackground } from '@imgly/background-removal';
@@ -7,6 +7,13 @@ declare global {
   interface Window {
     ort: any;
   }
+}
+
+interface DtfDesignItem {
+  id: string;
+  titulo: string;
+  rutaWeb: string;
+  categoria: string;
 }
 
 @Component({
@@ -29,7 +36,7 @@ declare global {
 
       <!-- INDICADOR DE DESPLAZAMIENTO UX -->
       @if (zoomLevel() > 1) {
-        <div class="absolute bottom-4 left-4 right-4 md:right-auto bg-orange-600 text-white text-[8px] font-black px-2 py-2 rounded-md uppercase tracking-wider z-30 shadow-sm animate-pulse text-center md:text-left">
+        <div class="absolute bottom-13 left-4 right-4 md:right-auto bg-orange-600 text-white text-[8px] font-black px-2 py-2 rounded-md uppercase tracking-wider z-30 shadow-sm animate-pulse text-center md:text-left">
           🤚 Toque sostenido y arrastra para mover las prendas
         </div>
       }
@@ -42,11 +49,10 @@ declare global {
         </div>
       }
 
-      <!-- 🌟 CONTENEDOR MÁSTIL: Mantiene las dimensiones fijas y centra el lienzo interno usando Flexbox -->
-      <div class="w-full aspect-[29/19] md:w-[580px] md:h-[380px] relative overflow-hidden rounded-2xl bg-gray-50/50 flex items-center justify-center">
+      <!-- CONTENEDOR RESPONSIVO BLINDADO -->
+      <div class="w-full aspect-[29/19] md:w-[580px] md:h-[350px] relative overflow-hidden rounded-2xl bg-gray-50/50 flex items-center justify-center">
         
-        <!-- El lienzo interno mide exactamente 580x380 y se escala simétricamente -->
-        <div class="w-[580px] h-[380px] relative transition-transform duration-300 ease-out origin-center shrink-0"
+        <div class="w-[580px] h-[350px] relative transition-transform duration-300 ease-out origin-center shrink-0 max-sm:[transform:scale(calc(var(--mobile-scale,0.65)))]"
              [style.transform]="'scale(' + zoomLevel() + ')'"
              [style.left.px]="panOffset.x"
              [style.top.px]="panOffset.y"
@@ -63,12 +69,11 @@ declare global {
              
           <!-- CAPA 1: MOLDES VECTORIALES NATIVOS ANCHOS -->
           <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-            <svg xmlns="http://w3.org" width="580" height="380" viewBox="0 0 580 380" class="w-full h-full">
-              
-              <!-- COLUMNA 1: SILUETA DEL FRENTE -->
+            <svg xmlns="http://w3.org" width="580" height="350" viewBox="0 0 580 350" class="w-full h-full">
+              <!-- Moldes de tus polos (Frente y Espalda) intactos -->
               <g transform="translate(40, 20)">
                 @if (currentProductId === 'prod-polo-pima' || currentProductId === 'prod-polo-pique') {
-                  <path d="M40,40 L160,40 L210,80 L180,120 L155,110 L155,270 L45,270 L45,110 L20,120 L-10,80 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
+                  <path d="M40,40 L160,40 L210,80 L180,120 L155,110 L155,240 L45,240 L45,110 L20,120 L-10,80 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
                   <path d="M40,40 Q100,72 160,40" fill="none" [attr.stroke]="getStrokeColor()" stroke-width="2.8"/>
                   @if (currentProductId === 'prod-polo-pique') {
                     <path d="M40,40 L100,75 L160,40" fill="none" [attr.stroke]="getStrokeColor()" stroke-width="2.5"/>
@@ -92,11 +97,9 @@ declare global {
                   <path d="M50,30 L110,30 L110,190 L135,215 L120,245 L80,220 L60,150 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
                 }
               </g>
-
-              <!-- COLUMNA 2: SILUETA DE LA ESPALDA -->
               <g transform="translate(320, 20)">
                 @if (currentProductId === 'prod-polo-pima' || currentProductId === 'prod-polo-pique') {
-                  <path d="M40,40 L160,40 L210,80 L180,120 L155,110 L155,270 L45,270 L45,110 L20,120 L-10,80 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
+                  <path d="M40,40 L160,40 L210,80 L180,120 L155,110 L155,240 L45,240 L45,110 L20,120 L-10,80 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
                   <path d="M40,40 Q100,48 160,40" fill="none" [attr.stroke]="getStrokeColor()" stroke-width="2.8"/>
                 } @else if (currentProductId === 'prod-jean-urbano') {
                   <path d="M30,30 L150,30 L165,300 L115,300 L97,140 L79,300 L30,300 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
@@ -121,7 +124,7 @@ declare global {
                   <path d="M50,30 L110,30 L110,190 L135,215 L120,245 L80,220 L60,150 Z" [attr.fill]="colorCode" [attr.stroke]="getStrokeColor()" stroke-width="3" stroke-linejoin="round"/>
                 }
               </g>
-              <rect width="580" height="380" [attr.fill]="getShadowColor()" style="mix-blend-mode: overlay; pointer-events: none;"/>
+              <rect width="580" height="350" [attr.fill]="getShadowColor()" style="mix-blend-mode: overlay; pointer-events: none;"/>
             </svg>
           </div>
 
@@ -131,26 +134,116 @@ declare global {
           </div>
       </div>
     </div>
+
     <!-- Botón de subida perfectamente encajado al pie -->
     <div class="w-full flex justify-center pt-3">
       <!-- AGREGADO NATIVO HTML: BOTÓN CON FLOTADO DINÁMICO SOBRE LA IMAGEN SELECCIONADA -->
-        @if (showFloatingButton() && floatingBtnPos) {
-          <button 
-            (click)="processSelectedImageBg()"
-            [style.left.px]="floatingBtnPos.x"
-            [style.top.px]="floatingBtnPos.y"
-            class="absolute bg-orange-600 hover:bg-orange-700 text-white font-black text-[9px] uppercase tracking-wider h-7 px-2.5 rounded-lg shadow-2xl z-50 flex items-center gap-1 transition-all transform active:scale-95 cursor-pointer border border-white">
-            ✨Limpiar Fondo
-          </button>
-        }
+      @if (showFloatingButton() && floatingBtnPos) {
+        <button 
+          (click)="processSelectedImageBg()"
+          [style.left.px]="floatingBtnPos.x"
+          [style.top.px]="floatingBtnPos.y"
+          class="absolute bg-orange-600 hover:bg-orange-700 text-white font-black text-[9px] uppercase tracking-wider h-7 px-2.5 rounded-lg shadow-2xl z-50 flex items-center gap-1 transition-all transform active:scale-95 cursor-pointer border border-white">
+          ✨Limpiar Fondo
+        </button>
+      }
+
+      @if (showFloatingButton() && deleteBtnPos) {
+        <button
+          (click)="deleteSelectedLayer()"
+          [style.left.px]="deleteBtnPos.x"
+          [style.top.px]="deleteBtnPos.y"class="absolute bg-red-600 hover:bg-red-700 text-white font-black text-[9px] w-[60px] uppercase tracking-wider h-7 rounded-lg shadow-2xl z-50 flex items-center justify-center gap-1 transition-all transform active:scale-95 cursor-pointer border border-white">
+          🗑️Borrar
+        </button>
+      }
+
       <label 
         [class.opacity-50]="isProcessingBg()"
         [class.pointer-events-none]="isProcessingBg()"
-        class="w-full bg-gray-900 hover:bg-orange-600 text-white text-[11px] font-black uppercase tracking-wider py-3.5 rounded-xl shadow-md cursor-pointer transition-all text-center block transform active:scale-95 z-30">    
+        class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-[11px] font-black uppercase tracking-wider py-3.5 rounded-xl shadow-md cursor-pointer transition-all text-center block transform active:scale-95">    
         📸 Subir Logo o Imagen Extra
         <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
       </label>
+
+      <button 
+          (click)="toggleCatalogModal(true)"
+          class="flex-1 bg-orange-600 hover:bg-orange-700 text-white text-[11px] font-black uppercase tracking-wider py-3.5 rounded-xl shadow-md cursor-pointer transition-all text-center block transform active:scale-95">
+          🎨 Catálogo DTF en Stock
+      </button>
     </div>
+
+    @if (showCatalogModal()) {
+      <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-[440px] rounded-3xl shadow-2xl flex flex-col max-h-[90%] border border-gray-100 overflow-hidden">
+          <!-- Cabecera del Modal -->
+          <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-1.5">
+              <span>🎨</span> Estampados Disponibles
+            </h3>
+            <button (click)="toggleCatalogModal(false)" class="text-gray-400 hover:text-gray-900 text-sm font-black w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200/60 transition-all cursor-pointer">✕</button>
+          </div>
+
+          <!-- Buscador Predictivo -->
+          <div class="p-3 border-b border-gray-100 bg-white">
+            <div class="relative">
+              <input 
+                type="text"
+                [value]="searchTerm()"
+                (input)="onSearchChange($event)"
+                placeholder="🔎 Buscar diseño por palabra clave (Ej: goku)..."
+                class="w-full bg-gray-50 border border-gray-200/80 rounded-xl py-2 pl-4 pr-4 text-xs font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:bg-white transition-all" />
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 px-3 py-2 border-b border-gray-50 bg-gray-50/30 overflow-x-auto shrink-0 touch-pan-x">
+            @for (cat of dtfCategories(); track cat) {
+              <button
+                (click)="selectCategory(cat)"
+                [ngClass]="getCategoryClasses(cat)">
+                {{ cat }}
+              </button>
+            }
+          </div>
+
+          <!-- Área de Contenido con Scroll Vertical -->
+          <div class="p-4 overflow-y-auto flex-1">
+            @if (filteredDtfImages().length === 0) {
+              <div class="flex flex-col items-center justify-center py-8 text-center text-gray-400">
+                <span class="text-2xl mb-1">🎨</span>
+                <p class="text-xs font-black text-gray-900 uppercase tracking-wider">No se encontraron diseños</p>
+                <p class="text-[10px] mt-0.5">Intenta con otra palabra o cambia de categoría</p>
+              </div>
+            } @else {
+              <!-- 🌟 CONTENEDOR EN CUADRÍCULA OBLIGATORIO -->
+              <div class="grid grid-cols-3 gap-3">
+                @for (design of filteredDtfImages().slice(0, visibleCount()); track design.id) {
+                  <div 
+                    (click)="selectDtfFromStock(design.rutaWeb)"
+                    class="group aspect-square bg-gray-50 rounded-2xl overflow-hidden border-2 border-transparent hover:border-orange-500 cursor-pointer transition-all p-1.5 flex flex-col items-center justify-center transform active:scale-95 shadow-sm relative">
+                    <img [src]="design.rutaWeb" class="max-w-full max-h-[85%] object-contain group-hover:scale-105 transition-transform" [alt]="design.titulo" />
+                    <div class="absolute bottom-1 left-1 right-1 text-[7px] font-black text-gray-400 text-center truncate uppercase tracking-wide bg-white/95 py-0.5 rounded-md">
+                      {{ design.titulo }}
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Botón de Paginación Inteligente -->
+              @if (filteredDtfImages().length > visibleCount()) {
+                <div class="mt-4 text-center">
+                  <button 
+                    (click)="loadMoreDesigns()"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-[9px] font-black uppercase tracking-widest h-8 px-4 rounded-xl transition-all transform active:scale-95 cursor-pointer w-full">
+                    🔄 Cargar Más Diseños ({{ filteredDtfImages().length - visibleCount() }} restantes)
+                  </button>
+                </div>
+              }
+            }
+          </div>
+
+        </div>
+      </div>
+    }
   `
 })
 export class CanvasViewerComponent implements AfterViewInit, OnChanges {
@@ -165,24 +258,47 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
   public zoomLevel = signal<number>(1.0);
   public removeBgChecked = signal(false);
   public isProcessingBg = signal(false);
+  public showCatalogModal = signal<boolean>(false);
 
+  // SIGNALS Y VARIABLES DE COORDENADAS PARA AMBOS BOTONES FLOTANTES TÁCTILES
+  public dtfCategories = signal<string[]>(['Todos']);
+  public allDtfDesigns = signal<DtfDesignItem[]>([]);
+  public activeCategory = signal<string>('Todos');
+  public searchTerm = signal<string>('');
+
+  public visibleCount = signal<number>(15);
+  public customerNotes = signal<string>('');
+  
   public showFloatingButton = signal(false);
   public floatingBtnPos: { x: number, y: number } | null = null;
+  public deleteBtnPos: { x: number, y: number } | null = null;
 
   public panOffset = { x: 0, y: 0 };
   public isPanning = false;
   private startX = 0;
   private startY = 0;
 
+  public dtfStockImages = signal<string[]>([]);
+
   private isTouchDevice = false;
 
   private fabricCanvas!: fabric.Canvas;
   private fabricTextFrente: fabric.Text | null = null;
-  private fabricTextEspalda: fabric.Text | null = null;
+  private fabricTextEspalda: fabric.Text | null = null;  
+
+   public miCelularPersonal: string = '51959087092'; 
 
   ngAfterViewInit() {
     this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     this.initCanvasEngine();
+
+    this.loadCatalogMaestroData();
+
+    if (this.isTouchDevice) {
+      const containerWidth = this.canvasRef.nativeElement.parentElement?.clientWidth || window.innerWidth;
+      const scaleFactor = (containerWidth - 16) / 580;
+      document.documentElement.style.setProperty('--mobile-scale', scaleFactor.toString());
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -203,11 +319,11 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
   private initCanvasEngine() {
     const canvasElement = this.canvasRef.nativeElement;
     canvasElement.width = 580;
-    canvasElement.height = 380;
+    canvasElement.height = 350;
 
     this.fabricCanvas = new fabric.Canvas(canvasElement, {
       width: 580,
-      height: 380,
+      height: 350,
       preserveObjectStacking: true
     });
 
@@ -216,12 +332,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Delete' || e.key === 'Backspace') {
-        const activeObj = this.fabricCanvas.getActiveObject();
-        if (activeObj && !((activeObj as any).isEditing)) {
-          this.fabricCanvas.remove(activeObj);
-          this.showFloatingButton.set(false);
-          this.fabricCanvas.renderAll();
-        }
+        this.deleteSelectedLayer();
       }
     });
   } 
@@ -235,26 +346,66 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
     return (this.colorCode === '#111111' || this.colorCode === '#1d4ed8') ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
   }
 
+  /**
+   * CÁLCULO DE POSICIONES EN TIEMPO REAL: Posiciona Limpiar Fondo a la izquierda y Eliminar a la derecha
+   */
   private setupCustomFabricControls() {
-    const updateButtonPosition = () => {
+    const updateButtonPositions = () => {
       const activeObject = this.fabricCanvas.getActiveObject();
-      if (activeObject && activeObject.type === 'image') {
+      
+      if (activeObject) {
+        // 1. Obtener la caja de colisión real renderizada en el Viewport del Canvas
         const boundingRect = activeObject.getBoundingRect();
+        
+        // 2. Calcular el centro horizontal superior de la imagen seleccionada
+        const topCenterY = boundingRect.top;
+        const centerX = boundingRect.left + (boundingRect.width / 2);
+
+        // 3. Botón ✨ Limpiar Fondo: Posicionado a la izquierda del centro
         this.floatingBtnPos = {
-          x: boundingRect.left - 5,
-          y: boundingRect.top - 36
+          x: centerX - 105, // Centrado perfecto hacia el lado izquierdo
+          y: topCenterY - 68 // Flota exactamente 38 píxeles arriba del recuadro naranja
         };
+
+        // 4. Botón 🗑️ Borrar: Posicionado a la derecha del centro
+        this.deleteBtnPos = {
+          x: centerX + 10,   // Centrado perfecto hacia el lado derecho
+          y: topCenterY - 68 // Alineado a la misma altura horizontal
+        };
+
         this.showFloatingButton.set(true);
       } else {
         this.showFloatingButton.set(false);
       }
     };
 
-    this.fabricCanvas.on('selection:created', updateButtonPosition);
-    this.fabricCanvas.on('selection:updated', updateButtonPosition);
+    // Escuchadores nativos de Fabric para refrescar las coordenadas en cada movimiento o re-escala
+    this.fabricCanvas.on('selection:created', updateButtonPositions);
+    this.fabricCanvas.on('selection:updated', updateButtonPositions);
     this.fabricCanvas.on('selection:cleared', () => this.showFloatingButton.set(false));
-    this.fabricCanvas.on('object:moving', updateButtonPosition);
-    this.fabricCanvas.on('object:scaling', updateButtonPosition);
+    
+    this.fabricCanvas.on('object:moving', updateButtonPositions);
+    this.fabricCanvas.on('object:scaling', updateButtonPositions);
+  }
+
+  /**
+   * EVALUADOR DE CONTEXTO: Verifica si la capa es una imagen para renderizar el botón de la chispita
+   */
+  public isCurrentImageSelected(): boolean {
+    const activeObject = this.fabricCanvas?.getActiveObject();
+    return activeObject ? activeObject.type === 'image' : false;
+  }
+
+  /**
+   * 🗑️ ACCIÓN DE BORRADO DE CAPA: Funciona de forma táctil nativa eliminando logos o cajas de texto
+   */
+  public deleteSelectedLayer() {
+    const activeObj = this.fabricCanvas.getActiveObject();
+    if (activeObj && !((activeObj as any).isEditing)) {
+      this.fabricCanvas.remove(activeObj);
+      this.showFloatingButton.set(false);
+      this.fabricCanvas.renderAll();
+    }
   }
   
   public async processSelectedImageBg() {
@@ -300,11 +451,12 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
       const transparentDataUrl = canvas.toDataURL('image/png');
 
       await fabricImage.setSrc(transparentDataUrl);
+      
       this.fabricCanvas.renderAll();
       this.fabricCanvas.fire('selection:created');
 
     } catch (err) {
-      console.error("Error al limpiar el fondo en Canvas:", err);
+      console.error("Error al limpiar el fondo por color en Canvas:", err);
     } finally {
       this.isProcessingBg.set(false);
     }
@@ -398,7 +550,6 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
     const editableText = new fabric.IText('TEXTO', {
       left: 290, top: 150, fontFamily: 'Impact', fill: '#facc15', fontSize: 24, fontWeight: 'bold', originX: 'center', originY: 'center', cornerColor: '#ff5a00', cornerSize: dynamicCornerSize, transparentCorners: false, hasControls: true, hasBorders: true
     });
-
     this.fabricCanvas.add(editableText);
     this.fabricCanvas.setActiveObject(editableText);
     this.fabricCanvas.renderAll();
@@ -412,7 +563,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
       this.fabricCanvas.renderAll();
     }
   }
-  
+
   public changeSelectedTextFont(fontName: string) {
     if (!this.fabricCanvas) return;
     const activeObject = this.fabricCanvas.getActiveObject();
@@ -421,7 +572,7 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
       this.fabricCanvas.renderAll();
     }
   }
-  
+
   public onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -429,9 +580,8 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
       const reader = new FileReader();
       reader.onload = (e) => {
         fabric.Image.fromURL(e.target?.result as string).then((img) => {
-          const dynamicCornerSize = this.isTouchDevice ? 12 : 7;img.set({
-            left: 140, top: 150, originX: 'center', originY: 'center', cornerColor: '#ff5a00', cornerSize: dynamicCornerSize, transparentCorners: false, hasControls: true, hasBorders: true
-          });
+          const dynamicCornerSize = this.isTouchDevice ? 12 : 7;
+          img.set({left: 140, top: 150, originX: 'center', originY: 'center', cornerColor: '#ff5a00', cornerSize: dynamicCornerSize, transparentCorners: false, hasControls: true, hasBorders: true});
           img.scaleToWidth(75);
           this.fabricCanvas.add(img);
           this.fabricCanvas.setActiveObject(img);
@@ -441,5 +591,265 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
       };
       reader.readAsDataURL(file[0]);
     }
+  }
+
+  public filteredDtfImages = computed(() => {
+    const designs = this.allDtfDesigns();
+    const category = this.activeCategory();
+    const query = this.searchTerm().toLowerCase().trim();
+
+    return designs.filter(design => {
+      const matchesCategory = (category === 'Todos') || (design.categoria === category);
+      const matchesSearch = !query || design.titulo.toLowerCase().includes(query);
+      return matchesCategory && matchesSearch;
+    });
+  });
+
+  public async loadCatalogMaestroData() {
+    try {
+      const baseAppUrl = window.location.origin;
+      const response = await fetch(`${baseAppUrl}/assets/catalogo-maestro.json`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.dtfConfig) {
+          this.dtfCategories.set(data.dtfConfig.categorias || ['Todos']);
+          this.allDtfDesigns.set(data.dtfConfig.disenos || []);
+        }
+      }
+    } catch (err) {
+      console.error("Error leyendo catálogo indexado en Angular:", err);
+    }
+  }
+
+  public toggleCatalogModal(isOpen: boolean) {
+    this.showCatalogModal.set(isOpen);
+    if (isOpen) {
+      // 🌟 Al abrir el modal, reiniciamos los filtros y la paginación a su estado inicial
+      this.searchTerm.set('');
+      this.activeCategory.set('Todos');
+      this.visibleCount.set(15);
+      this.loadCatalogMaestroData();
+    }
+  }
+
+  public onSearchChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+    this.visibleCount.set(15); // Reiniciar paginación al buscar
+  }
+
+  public selectCategory(categoryName: string) {
+    this.activeCategory.set(categoryName);
+    this.visibleCount.set(15); // Reiniciar paginación al cambiar de pestaña
+  }
+
+  public loadMoreDesigns() {
+    this.visibleCount.update(count => count + 15);
+  }
+
+  public selectDtfFromStock(imagePath: string) {
+    this.toggleCatalogModal(false);
+
+    fabric.Image.fromURL(imagePath).then((img) => {
+      const dynamicCornerSize = this.isTouchDevice ? 12 : 7;
+      img.set({ 
+        left: 140, top: 150, originX: 'center', originY: 'center',
+        cornerColor: '#ff5a00', cornerSize: dynamicCornerSize, transparentCorners: false,
+        hasControls: true, hasBorders: true
+      });
+      img.scaleToWidth(75);
+      
+      this.fabricCanvas.add(img);
+      this.fabricCanvas.setActiveObject(img);
+      img.setCoords(); 
+      this.fabricCanvas.renderAll();
+    }).catch(err => console.error("Error al inyectar diseño de stock:", err));
+  }
+
+  public getCategoryClasses(categoryName: string): string {
+    const baseClasses = "shrink-0 text-[10px] font-black uppercase tracking-wider px-3 h-7 rounded-lg border transition-all cursor-pointer transform active:scale-95";
+    
+    if (this.activeCategory() === categoryName) {
+      return `${baseClasses} bg-orange-600 text-white border-orange-600`;
+    } else {
+      return `${baseClasses} bg-white text-gray-600 border-gray-200/60 hover:border-gray-400`;
+    }
+  }
+
+  // 2. Agrega este método al final de tu componente, antes de la última llave de cierre:
+  /**
+   * 📸 EXPORTADOR PROFESIONAL DE MOCKUP UNIFICADO CON OBSERVACIONES
+   * Fusiona los vectores del producto, el lienzo de Fabric y las notas en un PNG descargable
+  */
+
+  public async exportFullMockupWithNotes(notes: string) {
+    try {
+      const baseWidth = 580;
+      const baseHeight = 350;
+      const footerHeight = 60;
+
+      // 1. Crear el Canvas maestro secundario en memoria libre de bloqueos
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = baseWidth;
+      exportCanvas.height = baseHeight + footerHeight;
+      const ctx = exportCanvas.getContext('2d');
+      if (!ctx) return;
+
+      // 2. Pintar fondo blanco base para el archivo final
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+
+      // 3. 🌟 DIBUJAR LAS SILUETAS DE LAS PRENDAS DIRECTAMENTE POR COORDENADAS
+      // Esto clona de manera exacta tus SVG nativos sin tocar el DOM, garantizando que el polo salga dibujado con su color real
+      ctx.save();
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.fillStyle = this.colorCode || '#ffffff';
+      ctx.strokeStyle = this.colorCode === '#111111' ? 'rgba(255,255,255,0.45)' : 'rgba(17,17,17,0.22)';
+
+      // --- SILUETA 1: FRENTE ---
+      ctx.translate(40, 20);
+      if (this.currentProductId === 'prod-polo-pima' || this.currentProductId === 'prod-polo-pique') {
+        ctx.beginPath();
+        ctx.moveTo(40, 40); ctx.lineTo(160, 40); ctx.lineTo(210, 80); ctx.lineTo(180, 120);
+        ctx.lineTo(155, 110); ctx.lineTo(155, 240); ctx.lineTo(45, 240); ctx.lineTo(45, 110);
+        ctx.lineTo(20, 120); ctx.lineTo(-10, 80); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+
+        ctx.beginPath(); ctx.lineWidth = 2.8; ctx.arc(100, -32, 75, 0.45 * Math.PI, 0.55 * Math.PI); ctx.stroke();
+        if (this.currentProductId === 'prod-polo-pique') {
+          ctx.beginPath(); ctx.lineWidth = 2.5; ctx.moveTo(40, 40); ctx.lineTo(100, 75); ctx.lineTo(160, 40); ctx.stroke();
+          ctx.beginPath(); ctx.lineWidth = 2; ctx.moveTo(100, 75); ctx.lineTo(100, 118); ctx.stroke();
+        }
+      } 
+      // 🌟 AGREGADO: Condicional específica para dibujar de forma limpia tus calcetines/medias largas
+      else if (this.currentProductId.includes('medias')) {
+        ctx.beginPath();
+        // Trazo nativo de la bota/tubo y el talón de la media larga
+        ctx.moveTo(50, 30); ctx.lineTo(110, 30); ctx.lineTo(110, 190); ctx.lineTo(135, 215);
+        ctx.lineTo(120, 245); ctx.lineTo(80, 220); ctx.lineTo(60, 150); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+      } 
+      else if (this.currentProductId === 'prod-cuadro-aluminio') {
+        ctx.beginPath(); ctx.roundRect(25, 30, 140, 210, 8); ctx.fill(); ctx.stroke();
+      } else if (this.currentProductId === 'prod-pack-imanes') {
+        ctx.beginPath(); ctx.roundRect(25, 60, 135, 135, 10); ctx.fill(); ctx.stroke();
+      }
+
+      // --- SILUETA 2: ESPALDA ---
+      ctx.restore();
+      ctx.save();
+      ctx.lineWidth = 3; ctx.lineJoin = 'round';
+      ctx.fillStyle = this.colorCode || '#ffffff';
+      ctx.strokeStyle = this.colorCode === '#111111' ? 'rgba(255,255,255,0.45)' : 'rgba(17,17,17,0.22)';
+      
+      ctx.translate(320, 20);
+      if (this.currentProductId === 'prod-polo-pima' || this.currentProductId === 'prod-polo-pique') {
+        ctx.beginPath();
+        ctx.moveTo(40, 40); ctx.lineTo(160, 40); ctx.lineTo(210, 80); ctx.lineTo(180, 120);
+        ctx.lineTo(155, 110); ctx.lineTo(155, 240); ctx.lineTo(45, 240); ctx.lineTo(45, 110);
+        ctx.lineTo(20, 120); ctx.lineTo(-10, 80); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+
+        ctx.beginPath(); ctx.lineWidth = 2.8; ctx.arc(100, 2, 60, 1.36 * Math.PI, 1.64 * Math.PI); ctx.stroke();
+      } 
+      // 🌟 AGREGADO: Clona de forma simétrica la segunda media de tu catálogo
+      else if (this.currentProductId.includes('medias')) {
+        ctx.beginPath();
+        ctx.moveTo(50, 30); ctx.lineTo(110, 30); ctx.lineTo(110, 190); ctx.lineTo(135, 215);
+        ctx.lineTo(120, 245); ctx.lineTo(80, 220); ctx.lineTo(60, 150); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+      } 
+      else {
+        ctx.fillStyle = '#fcfcfc';
+        ctx.beginPath(); ctx.roundRect(25, 60, 135, 135, 10); ctx.fill(); ctx.stroke();
+      }
+      ctx.restore();
+
+      // 4. Estampar la capa del sombreado realista (Efecto Overlay del SVG)
+      ctx.save();
+      ctx.globalCompositeOperation = 'overlay';
+      ctx.fillStyle = this.getShadowColor();
+      ctx.fillRect(0, 0, baseWidth, baseHeight);
+      ctx.restore();
+
+      // 5. Extraer y fusionar encima las capas de los logos de Fabric v6
+      const fabricDataUrl = this.fabricCanvas.toDataURL({ format: 'png', multiplier: 1 });
+      const fabricImage = new Image();
+      fabricImage.src = fabricDataUrl;
+      await new Promise((resolve) => (fabricImage.onload = resolve));
+      ctx.drawImage(fabricImage, 0, 0, baseWidth, baseHeight);
+
+      // 6. Dibujar la franja inferior estática para las observaciones del pedido
+      ctx.fillStyle = '#f9fafb';
+      ctx.fillRect(0, baseHeight, baseWidth, footerHeight);
+      
+      ctx.lineWidth = 1; ctx.strokeStyle = '#e5e7eb';
+      ctx.beginPath(); ctx.moveTo(0, baseHeight); ctx.lineTo(baseWidth, baseHeight); ctx.stroke();
+
+      // 7. Escribir las cabeceras y el texto de la anotación
+      ctx.fillStyle = '#111827';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('📝 OBSERVACIONES DE PERSONALIZACIÓN:', 20, baseHeight + 22);
+
+      ctx.fillStyle = '#4b5563';
+      ctx.font = 'medium 11px sans-serif';
+      const notaTexto = notes.trim() || 'Ninguna especificada por el cliente.';
+      
+      if (notaTexto.length > 75) {
+        ctx.fillText(notaTexto.substring(0, 75) + '...', 20, baseHeight + 42);
+      } else {
+        ctx.fillText(notaTexto, 20, baseHeight + 42);
+      }
+
+      // 8. Disparar la descarga limpia y directa del PNG unificado
+      const finalDataUrl = exportCanvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `mockup-${this.currentProductId}-${Date.now()}.png`;
+      downloadLink.href = finalDataUrl;
+      
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+    } catch (err) {
+      console.error("Error al exportar el mockup completo con siluetas:", err);
+    }
+  }
+
+  /**
+   * 🚀 MOTOR DE COMPRA DIRECTA POR WHATSAPP (100% LOCAL SIN BACKEND)
+   * Captura los datos del producto, color, genera la descarga y abre tu WhatsApp personal
+  */
+  public enviarPedidoWhatsApp(notesFromParent: string, size: string) {
+    // 1. Gatillar la descarga del mockup final
+    this.exportFullMockupWithNotes(notesFromParent);
+
+    // 2. Extraer los datos técnicos del componente
+    const productoActual = this.currentProductId || 'Producto Personalizado';
+    const colorActual = this.colorCode || 'No especificado';
+    const notasLimpias = notesFromParent.trim() || 'Ninguna.';
+    const tallaActual = size.trim() || 'Ninguna.';    
+    
+
+    // 3. 🌟 SOLUCIÓN DEFINITIVA: Una sola plantilla de comillas invertidas (Backticks) limpia sin usar el signo "+"
+    // Esto obliga al navegador a reemplazar las variables dinámicas de forma matemática e infalible
+    const mensajeFormateado = `¡Hola! 👋 Deseo confirmar el siguiente pedido de personalización:
+
+    📦 *PRODUCTO:* ${productoActual}
+    🎨 *COLOR BASE:* ${colorActual}
+    📏 *TALLA:* ${tallaActual}
+    📝 *OBSERVACIONES:* ${notasLimpias}
+
+    📌 _Acabo de descargar el mockup oficial. Lo adjunto a continuación de este mensaje para el taller._`;
+
+    // 4. Codificar correctamente el mensaje para que los espacios y emojis viajen seguros por internet
+    const mensajeCodificado = encodeURIComponent(mensajeFormateado);
+
+    // 5. 🌟 CORRECCIÓN CRÍTICA DE LA URL: Enlazado limpio e incuestionable para el navegador
+    const urlWhatsApp = "https://wa.me/" + this.miCelularPersonal + "?text=" + mensajeCodificado;
+
+    // 6. Redirección instantánea hacia tu chat personal
+    window.open(urlWhatsApp, '_blank');
   }
 }

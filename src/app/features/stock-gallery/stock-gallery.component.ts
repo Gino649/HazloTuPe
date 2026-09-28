@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/services/product/product.service';
 import { CartService } from '../../core/services/cart/cart.service';
@@ -10,11 +10,22 @@ import { Product } from '../../models/product.model';
   imports: [CommonModule],
   templateUrl: './stock-gallery.component.html'
 })
-export class StockGalleryComponent {
+export class StockGalleryComponent implements OnInit {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
 
-  // Guardamos la categoría activa seleccionada por el usuario en una Signal
+  // 🌟 SIGNAL PARA ALMACENAR TODAS LAS RUTAS DE IMÁGENES DEL JSON MAESTRO
+  public catalogImages = signal<Record<string, string[]>>({});
+
+  // SIGNALS PARA GESTIONAR EL MODAL FLOTANTE EN ALTA DEFINICIÓN
+  public isModalOpen = signal<boolean>(false);
+  public selectedModalImage = signal<string>('');
+  public selectedModalTitle = signal<string>('');
+
+  public miCelularPersonal: string = '51959087092'; 
+  public activeIndices = signal<Record<string, number>>({});
+
+  // Guardamos la categoría activa seleccionada por el usuario en un Signal
   public activeCategory = signal<Product['category'] | 'todos'>('todos');
 
   // Computed Signal: Filtra automáticamente los productos cada vez que cambia la categoría activa
@@ -29,6 +40,28 @@ export class StockGalleryComponent {
   });
 
   /**
+   * 🌟 AL INICIAR EL COMPONENTE:
+   * Cargamos el archivo JSON indexado autogenerado por Node.js de tus assets
+   */
+  ngOnInit(): void {
+    this.loadCatalogMaestroData();
+  }
+
+  public async loadCatalogMaestroData() {
+    try {
+      const baseAppUrl = window.location.origin;
+      const response = await fetch(`${baseAppUrl}/assets/catalogo-maestro.json`);
+      if (response.ok) {
+        const data = await response.json();
+        // Almacenamos el JSON indexado completo con las carpetas 'polos', 'bebe', 'imanes', etc.
+        this.catalogImages.set(data || {});
+      }
+    } catch (err) {
+      console.error("Error al cargar el catálogo de imágenes en stock:", err);
+    }
+  }
+
+  /**
    * Cambia la pestaña de filtrado en la tienda
    */
   public changeCategory(category: Product['category'] | 'todos'): void {
@@ -36,32 +69,72 @@ export class StockGalleryComponent {
   }
 
   /**
-   * Flujo de Compra Rápida Directa (Sin pasar por el simulador)
+   * 🌟 MANEJADORES DEL MODAL FLOTANTE INTERACTIVO
    */
-  public comprarDirecto(product: Product): void {
-    // Para compras directas de stock, tomamos los valores por defecto
-    const defaultColor = product.colors && product.colors.length > 0 ? product.colors[0] : undefined;
-    const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined;
+  public openImageModal(imgSrc: string, productTitle: string): void {
+    this.selectedModalImage.set(imgSrc);
+    this.selectedModalTitle.set(productTitle);
+    this.isModalOpen.set(true);
+  }
 
-    this.cartService.addToCart({
-      productId: product.id,
-      name: product.name,
-      category: product.category,
-      price: product.basePrice,
-      quantity: 1,
-      size: defaultSize,
-      colorCode: defaultColor?.code,
-      colorName: defaultColor?.name,
-      isCustomized: false // Compra de stock directa
-    });
-
-    alert(`¡${product.name} añadido al carrito correctamente!`);
+  public closeImageModal(): void {
+    this.isModalOpen.set(false);
+    this.selectedModalImage.set('');
+    this.selectedModalTitle.set('');
   }
 
   /**
-   * Redirección simulada al simulador cargando este recurso base
-   */
-  public abrirEnSimulador(product: Product): void {
-    alert(`Cargando ${product.name} en el simulador interactivo para agregar texto o imágenes encima...`);
+   * 🛒 FLUJO DE COMPRA RÁPIDA DIRECTA REFORMULADO
+   * Compra el producto en stock directo basándose en el modelo físico real
+  */
+  public comprarDirecto(product: Product, selectedImageSrc?: string): void {
+    const defaultColor = product.colors && product.colors.length > 0 ? product.colors[0]?.name : 'No especificado';
+    const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : 'M';
+    
+    // Si el usuario le dio al botón general de la tarjeta sin tocar una foto del carrusel,
+    // tomamos la primera imagen disponible de esa carpeta como respaldo.
+    let imagenFinal = selectedImageSrc;
+    if (!imagenFinal) {
+      const folderKey = (product as any).folderKey || product.id;
+      const availableImages = this.catalogImages()[folderKey];
+      imagenFinal = availableImages && availableImages.length > 0 ? availableImages[0] : 'assets/logo.png';
+    }
+
+    // 🌟 Construimos el mensaje de pedido directo
+    const mensajeFormateado = `¡Hola! 👋 Deseo comprar el siguiente producto del Catálogo de Stock:
+
+    📦 *PRODUCTO:* ${product.name}
+    💰 *PRECIO:* S/. ${product.basePrice.toFixed(2)}
+    📏 *TALLA REQUERIDA:* ${defaultSize}
+    🎨 *COLOR:* ${defaultColor}
+
+    🖼️ *DISEÑO ELEGIDO:* ${window.location.origin}/${imagenFinal}
+
+    📌 _Por favor, confírmame disponibilidad para coordinar el pago y despacho express._`;
+
+    // Codificamos el mensaje para que viaje seguro por internet
+    const mensajeCodificado = encodeURIComponent(mensajeFormateado);
+
+    // Creamos la URL limpia con la barra inclinada '/' obligatoria
+    const urlWhatsApp = "https://wa.me/" + this.miCelularPersonal + "?text=" + mensajeCodificado;
+
+    // Redirección instantánea hacia tu WhatsApp personal
+    window.open(urlWhatsApp, '_blank');
+  }
+
+  public getProductIndex(folderKey: string): number {
+    return this.activeIndices()[folderKey] || 0;
+  }
+
+  public nextImage(folderKey: string, totalImages: number): void {
+    const currentIndex = this.getProductIndex(folderKey);
+    const nextIndex = (currentIndex + 1) % totalImages;
+    this.activeIndices.update(prev => ({ ...prev, [folderKey]: nextIndex }));
+  }
+
+  public prevImage(folderKey: string, totalImages: number): void {
+    const currentIndex = this.getProductIndex(folderKey);
+    const prevIndex = (currentIndex - 1 + totalImages) % totalImages;
+    this.activeIndices.update(prev => ({ ...prev, [folderKey]: prevIndex }));
   }
 }

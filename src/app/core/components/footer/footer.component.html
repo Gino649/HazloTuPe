@@ -1,1 +1,81 @@
-<p>footer works!</p>
+<!-- 🌟 FOOTER COMERCIAL PREMIUM - HAZLOTÚ.PE -->
+<footer class="w-full bg-gray-950 text-gray-400 text-xs mt-16 border-t border-white/5 select-none font-medium">
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    
+    <!-- Columna 1: Identidad de Marca -->
+    <div class="space-y-4 text-center sm:text-left">
+      <div class="flex justify-center sm:justify-start">
+        <!-- 🌟 CORRECCIÓN: Quitamos brightness-0 invert y añadimos bg-white con padding para que resalte de inmediato -->
+        <img 
+          src="assets/images/logo-hazlotu.png" 
+          alt="HazloTu.pe" 
+          class="h-11 w-auto object-contain hover:scale-[1.02] transition-transform" />
+      </div>
+      <p class="text-[11px] text-gray-500 leading-relaxed max-w-xs mx-auto sm:mx-0">
+        La plataforma favorita de la comunidad peruana para estampar recuerdos, memes y artes favoritos con acabado fotorrealista de alta resistencia.
+      </p>
+    </div>
+
+    <!-- Columna 2: Enlaces Rápidos con Desplazamiento Suave -->
+    <div class="space-y-3 text-center sm:text-left">
+      <h4 class="text-white font-black text-[10px] uppercase tracking-widest text-orange-500">Navegación</h4>
+      <ul class="space-y-2">
+        <li>
+          <button (click)="clickMenu('simuladorSeccion')" class="hover:text-white transition-colors cursor-pointer text-[11px] bg-transparent border-none p-0 text-left">
+            🎨 Diseñar Prenda
+          </button>
+        </li>
+        <li>
+          <button (click)="clickMenu('catalogoSeccion')" class="hover:text-white transition-colors cursor-pointer text-[11px] bg-transparent border-none p-0 text-left">
+            📦 Galería de Stock
+          </button>
+        </li>
+        <li>
+          <button (click)="clickMenu('pasosSeccion')" class="hover:text-white transition-colors cursor-pointer text-[11px] bg-transparent border-none p-0 text-left">
+            ⚡ ¿Cómo funciona?
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Columna 3: Soporte y Pedidos Directos -->
+    <div class="space-y-3 text-center sm:text-left">
+      <h4 class="text-white font-black text-[10px] uppercase tracking-widest text-orange-500">Soporte Directo</h4>
+      <ul class="space-y-2 text-[11px]">
+        <li class="flex items-center justify-center sm:justify-start gap-1.5">
+          <span>📍</span> <span>Taller Activo en Lima, Perú</span>
+        </li>
+        <li>
+          <a href="https://wa.me?text=%C2%A1Hola%20HazloT%C3%BA%21%20%F0%9F%91%8B%20Estoy%20en%20la%20p%C3%A1gina%20web%20y%20tengo%20una%20consulta%20sobre%20los%20pedidos%20personalizados."
+            target="_blank" class="text-green-400 hover:text-green-300 font-bold flex items-center justify-center sm:justify-start gap-1">
+            🟢 Chat de Soporte: 959 087 092
+          </a>
+        </li>
+        <li class="text-gray-500">Atención: Lun a Sáb — 9 AM a 7 PM</li>
+      </ul>
+    </div>
+
+    <!-- Columna 4: Confianza y Métodos de Pago Locales -->
+    <div class="space-y-3 text-center sm:text-left">
+      <h4 class="text-white font-black text-[10px] uppercase tracking-widest text-orange-500">Pagos Seguros</h4>
+      <p class="text-[11px] text-gray-500 leading-tight">Procesa tus pedidos de forma directa y coordinada mediante transferencias locales.</p>
+      
+      <div class="flex items-center justify-center sm:justify-start gap-2 pt-1 opacity-60 hover:opacity-90 transition-opacity">
+        <span class="bg-white/5 border border-white/10 px-2 py-1 rounded-md text-[9px] font-black text-gray-300 tracking-wider">YAPE</span>
+        <span class="bg-white/5 border border-white/10 px-2 py-1 rounded-md text-[9px] font-black text-gray-300 tracking-wider">PLIN</span>
+        <span class="bg-white/5 border border-white/10 px-2 py-1 rounded-md text-[9px] font-black text-gray-300 tracking-wider">BCP</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Franja Inferior de Derechos de Autor -->
+  <div class="border-t border-white/5 bg-black/30 py-4 text-center text-[10px] text-gray-600 tracking-wide">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© 2026 *HazloTú.pe* — Todos los derechos reservados. Hecho en Perú 🇵🇪</p>
+      <p class="text-gray-700">Desplegado de forma express en Vercel a costo S/. 0.00</p>
+    </div>
+  </div>
+
+</footer>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, ViewChild ,signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/services/product/product.service';
 import { CartService } from '../../core/services/cart/cart.service';
@@ -12,6 +12,8 @@ import { CanvasViewerComponent } from './components/canvas-viewer/canvas-viewer.
   templateUrl: './customizer.component.html'
 })
 export class CustomizerComponent {
+  @ViewChild(CanvasViewerComponent) canvasChild!: CanvasViewerComponent;
+
   public productService = inject(ProductService);
   private cartService = inject(CartService);
 
@@ -58,4 +60,18 @@ export class CustomizerComponent {
     this.withTextFont = fontName;
     this.activeFont.set(fontName);
   }
+
+  /**
+   * 🚀 PUENTE DE DESCARGA:
+   * Llama a la función de exportación que reside dentro del TypeScript del canvas
+  */
+  public triggerWhatsAppCheckout() {
+    if (this.canvasChild) {
+      this.canvasChild.enviarPedidoWhatsApp(this.userObservations(),this.selectedSize());
+    } else {
+      console.warn("El simulador de canvas aún no está listo en la pantalla.");
+    }
+  }
+
+  
 }

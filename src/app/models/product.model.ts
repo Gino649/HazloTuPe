@@ -28,6 +28,7 @@ export interface Product {
   colors?: ColorVariant[];
   sizes?: string[]; // Variantes de tallas, ej: ['S', 'M', 'L', 'XL']
   allowedLocations: ViewLocation[];
+  folderKey: string;
   boundingBoxes: { [key in ViewLocation]?: BoundingBox } & Record<string, BoundingBox | undefined>;
 }
 
