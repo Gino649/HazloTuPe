@@ -51,4 +51,5 @@ const handler = async function (req: any, res: any) {
   }
 };
 
-export default handler;
+const _module: any = typeof (globalThis as any).module !== 'undefined' ? (globalThis as any).module : { exports: {} };
+_module.exports = handler;
