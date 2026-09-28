@@ -1,4 +1,4 @@
-export default async function handler(req: any, res: any) {
+const handler = async function (req: any, res: any) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -13,7 +13,6 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ error: 'No se recibió ninguna imagen' });
     }
 
-    // ⚡ IMPORTACIÓN ASÍNCRONA DINÁMICA: Cero líneas rojas en TypeScript y 100% compatible con Vercel
     const imglyModule: any = await (globalThis as any).import('@imgly/background-removal-node');
     const removeBackground = imglyModule.removeBackground;
 
@@ -50,4 +49,7 @@ export default async function handler(req: any, res: any) {
     console.error("Error en Vercel Serverless:", error);
     return res.status(500).json({ error: 'Error procesando la remoción de fondo', details: error.message });
   }
-}
+};
+
+(globalThis as any).module = (globalThis as any).module || {};
+(globalThis as any).module.exports = handler;
