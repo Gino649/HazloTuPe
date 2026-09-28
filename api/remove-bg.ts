@@ -1,7 +1,4 @@
-import { removeBackground } from '@imgly/background-removal-node';
-
 export default async function handler(req: any, res: any) {
-  // Control previo de cabeceras CORS
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -16,10 +13,10 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ error: 'No se recibió ninguna imagen' });
     }
 
-    // 1. Limpiamos el prefijo de metadatos del Base64
+    const { removeBackground } = await import('@imgly/background-removal-node');
+
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
     
-    // 2. Convertimos el Base64 en un arreglo de bytes binarios (Uint8Array) nativo de JavaScript
     const binaryString = atob(base64Data);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -27,10 +24,8 @@ export default async function handler(req: any, res: any) {
       bytes[i] = binaryString.charCodeAt(i);
     }
 
-    // 3. Creamos un Blob directamente en la memoria RAM del servidor de Vercel
     const imageBlobInput = new Blob([bytes], { type: 'image/png' });
 
-    // 4. La IA procesa el Blob en la memoria de forma óptima
     const processedBlob = await removeBackground(imageBlobInput, {
       model: 'small',
       output: {
@@ -39,7 +34,6 @@ export default async function handler(req: any, res: any) {
       }
     });
 
-    // 5. Convertimos el Blob transparente resultante de vuelta a Base64 usando operaciones de memoria nativas
     const arrayBuffer = await processedBlob.arrayBuffer();
     const outputBytes = new Uint8Array(arrayBuffer);
     let outputBinary = '';
