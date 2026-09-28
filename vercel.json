@@ -3,10 +3,6 @@
   "outputDirectory": "dist/hazlotu-frontend/browser",
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/$1.mjs"
-    },
-    {
       "handle": "filesystem"
     },
     {
