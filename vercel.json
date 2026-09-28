@@ -4,7 +4,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/$1.mts"
+      "dest": "api/$1.ts"
     },
     {
       "handle": "filesystem"
