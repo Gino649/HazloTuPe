@@ -16,7 +16,6 @@ export default async function handler(req, res) {
     }
 
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
-    
     const binaryString = atob(base64Data);
     const len = binaryString.length;
     const bytes = new Uint8Array(len);
@@ -26,10 +25,17 @@ export default async function handler(req, res) {
 
     const imageBlobInput = new Blob([bytes], { type: 'image/png' });
 
-    // 🔥 ENLACE DE UNPKG INMUTABLE: Descarga las dependencias nativas estructuradas directamente desde npm en internet
+    // ⚡ INYECCIÓN DE SEGURIDAD: Le damos el mapa exacto que Vercel oculta en producción
+    // Esto repara el error de metadata de raíz sin depender del sistema de archivos de la nube
+    globalThis.imglyBackgroundRemovalResources = {
+      "small": {
+        "model": "https://staticimgly.com",
+        "wasm": "https://staticimgly.com"
+      }
+    };
+
     const processedBlob = await removeBackground(imageBlobInput, {
       model: 'small',
-      publicPath: 'https://unpkg.com',
       output: {
         format: 'image/png',
         quality: 0.95
