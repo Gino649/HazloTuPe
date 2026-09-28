@@ -1,7 +1,7 @@
-import { Component, ElementRef, computed, Input, ViewChild, AfterViewInit, OnChanges, SimpleChanges, signal } from '@angular/core';
+import { Component, ElementRef, computed, Input, ViewChild, AfterViewInit, OnChanges, SimpleChanges, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as fabric from 'fabric'; 
-import { removeBackground } from '@imgly/background-removal';
+import {BackgroundRemovalService } from '../../../../core/services/removal/background-removal.service';
 
 declare global {
   interface Window {
@@ -246,8 +246,10 @@ interface DtfDesignItem {
     }
   `
 })
-export class CanvasViewerComponent implements AfterViewInit, OnChanges {
+export class CanvasViewerComponent implements AfterViewInit, OnChanges, OnInit {
   @ViewChild('mockupCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  private bgService = inject(BackgroundRemovalService); 
   
   @Input() colorCode: string = '#ffffff'; 
   @Input() currentProductId: string = 'prod-polo-pima'; 
@@ -286,7 +288,12 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
   private fabricTextFrente: fabric.Text | null = null;
   private fabricTextEspalda: fabric.Text | null = null;  
 
-   public miCelularPersonal: string = '51959087092'; 
+  public miCelularPersonal: string = '51959087092'; 
+
+  ngOnInit() {
+    // Inicializa los modelos de fondo mientras el usuario interactúa con el mockup
+    //this.bgService.preloadModels();
+  }
 
   ngAfterViewInit() {
     this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -416,6 +423,67 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
     this.showFloatingButton.set(false);
 
     try {
+      const fabricImage = activeObject as any; // Cast flexible para Fabric v6+
+      const htmlImage = fabricImage.getElement() as HTMLImageElement;
+
+      // 1. Dibujamos la imagen en un canvas temporal para extraer el Blob original
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      canvas.width = htmlImage.naturalWidth || htmlImage.width;
+      canvas.height = htmlImage.naturalHeight || htmlImage.height;
+      ctx.drawImage(htmlImage, 0, 0);
+
+      const imageBlob = await new Promise<Blob | null>((resolve) => 
+        canvas.toBlob((blob) => resolve(blob), 'image/png')
+      );
+
+      if (!imageBlob) throw new Error("No se pudo generar el Blob de la imagen");
+
+      // 2. Llamamos a nuestra API a través del servicio actualizado
+      const transparentBase64 = await this.bgService.removeBackgroundLocal(imageBlob);
+
+      // 3. Creamos el objeto de imagen nativo del navegador con el resultado transparente
+      const imgElement = new Image();
+      imgElement.src = transparentBase64;
+
+      imgElement.onload = () => {
+        // Actualizamos los gráficos internos de Fabric v6+
+        fabricImage.setElement(imgElement);
+
+        // Recalculamos las dimensiones del recuadro de selección azul de Fabric
+        fabricImage.set({
+          width: imgElement.naturalWidth || imgElement.width,
+          height: imgElement.naturalHeight || imgElement.height,
+          imageSmoothing: true 
+        });
+
+        // Refrescamos todo el lienzo en pantalla
+        this.fabricCanvas.renderAll();
+        
+        // Sincronizamos los eventos de UI con tus Signals
+        (this.fabricCanvas as any).fire('selection:updated', { target: fabricImage });
+        (this.fabricCanvas as any).fire('object:modified', { target: fabricImage });
+      };
+
+    } catch (err) {
+      console.error("Error al procesar la remoción de fondo vía API:", err);
+      alert("Ocurrió un error en el servidor al intentar limpiar el fondo de la imagen.");
+    } finally {
+      // Apagamos el estado de carga usando tus Angular Signals
+      this.isProcessingBg.set(false);
+    }
+  }
+  /*
+  public async processSelectedImageBg() {
+    const activeObject = this.fabricCanvas.getActiveObject();
+    if (!activeObject || activeObject.type !== 'image' || this.isProcessingBg()) return;
+
+    this.isProcessingBg.set(true);
+    this.showFloatingButton.set(false);
+
+    try {
       const fabricImage = activeObject as fabric.Image;
       const htmlImage = fabricImage.getElement() as HTMLImageElement;
 
@@ -460,8 +528,8 @@ export class CanvasViewerComponent implements AfterViewInit, OnChanges {
     } finally {
       this.isProcessingBg.set(false);
     }
-  }
-
+  } 
+  */
   public onPanStart(event: MouseEvent) {
     if (this.zoomLevel() > 1.0 && !this.fabricCanvas.getActiveObject()) {
       this.isPanning = true;
