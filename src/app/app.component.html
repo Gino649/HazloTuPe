@@ -231,58 +231,55 @@
     </section>    
         
     <!-- SECCIÓN: PASOS SIMPLES DE PERSONALIZACIÓN -->
-    <div id="pasosSeccion" class="scroll-mt-24 bg-gray-900 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden shadow-xl mt-12">
+    <div id="pasosSeccion" class="scroll-mt-24 bg-gray-900 rounded-3xl p-6 lg:p-8 text-white relative overflow-hidden shadow-xl mt-12 max-w-[1200px] mx-auto">
       <!-- Círculo difuminado de fondo -->
-      <div class="absolute w-64 h-64 bg-orange-600/20 rounded-full filter blur-3xl -bottom-10 -right-10 pointer-events-none"></div>
+      <div class="absolute w-48 h-48 bg-orange-600/10 rounded-full filter blur-3xl -bottom-10 -right-10 pointer-events-none"></div>
       
-      <!-- Encabezado de la Sección -->
-      <div class="max-w-2xl mb-12 text-center md:text-left">
-        <span class="text-xs font-black text-orange-500 uppercase tracking-widest block mb-1">Proceso Express Automatizado</span>
-        <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-1">Estampar tus ideas nunca fue tan fácil</h2>
-        <p class="text-xs text-gray-400 font-medium mt-1.5 max-w-xl">Sin registros complicados ni carritos eternos. Personaliza tu prenda en minutos y gestiona todo directo desde tu celular.</p>
+      <!-- Encabezado de la Sección Compacto -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 border-b border-white/5 pb-4">
+        <div class="text-center md:text-left">
+          <span class="text-[10px] font-black text-orange-500 uppercase tracking-widest block mb-0.5">Proceso Express Automatizado</span>
+          <h2 class="text-xl sm:text-2xl font-black tracking-tight mt-0.5">Estampar tus ideas nunca fue tan fácil</h2>
+        </div>
+        <p class="text-[11px] text-gray-400 font-medium max-w-md md:text-right text-center md:mt-0 mt-1">
+          Sin registros complicados ni carritos eternos. Personaliza tu prenda en minutos y gestiona todo directo por WhatsApp desde tu celular.
+        </p>
       </div>
 
-      <!-- Rejilla de Pasos Interactivos (1 columna en celular, 3 en pantallas grandes) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+      <!-- Rejilla de Pasos Interactivos Simétrica -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
         
         <!-- PASO 1: CREATIVIDAD -->
-        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
-          <div class="flex items-center justify-between">
-            <!-- Icono contenedor circular con color vivo constante -->
-            <div class="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center text-xl shadow-lg shadow-orange-600/40">
-              🎨
-            </div>
-            <!-- Número de guía minimalista flotante -->
-            <span class="text-3xl font-black text-white/10 group-hover:text-orange-500/20 transition-colors tracking-tighter select-none">01</span>
+        <div class="flex items-start gap-4 bg-white/5 border border-white/5 p-4 rounded-2xl backdrop-blur-md">
+          <div class="w-10 h-10 shrink-0 rounded-xl bg-orange-600 flex items-center justify-center text-lg shadow-lg shadow-orange-600/30">
+            🎨
           </div>
-          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">1. Sube tu Imagen</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Carga cualquier foto, meme o ilustración desde tu celular o computadora. Nuestro sistema procesará la transparencia automáticamente en el lienzo.</p>
+          <div class="space-y-1">
+            <h4 class="font-black text-xs uppercase tracking-wider text-gray-100">1. Sube tu Imagen</h4>
+            <p class="text-[11px] text-gray-400 leading-relaxed">Carga cualquier foto, meme o ilustración desde tu celular o computadora. Nuestro sistema procesará la transparencia automáticamente en el lienzo.</p>
+          </div>
         </div>
 
         <!-- PASO 2: CONFIRMACIÓN Y COMPRA DIRECTA -->
-        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
-          <div class="flex items-center justify-between">
-            <!-- El contenedor se enciende por completo con el color de WhatsApp en Hover -->
-            <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-xl transition-all duration-300 group-hover:bg-[#25D366] group-hover:border-[#25D366] group-hover:shadow-lg group-hover:shadow-green-600/30">
-              🚀
-            </div>
-            <span class="text-3xl font-black text-white/10 group-hover:text-green-500/20 transition-colors tracking-tighter select-none">02</span>
+        <div class="flex items-start gap-4 bg-white/5 border border-white/5 p-4 rounded-2xl backdrop-blur-md group">
+          <div class="w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-lg transition-all duration-300 group-hover:bg-[#25D366] group-hover:border-[#25D366] group-hover:shadow-lg group-hover:shadow-green-600/20">
+            🚀
           </div>
-          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">2. Pide por WhatsApp</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Elige tu talla y presiona confirmar. El sistema guardará el mockup en alta definición en tu teléfono y abrirá tu chat enviando los detalles técnicos al instante.</p>
+          <div class="space-y-1">
+            <h4 class="font-black text-xs uppercase tracking-wider text-gray-100">2. Pide por WhatsApp</h4>
+            <p class="text-[11px] text-gray-400 leading-relaxed">Elige tu talla y presiona confirmar. El sistema guardará el mockup en alta definición en tu teléfono y abrirá tu chat enviando los detalles técnicos al instante.</p>
+          </div>
         </div>
 
         <!-- PASO 3: DESPACHO EXPRESS -->
-        <div class="space-y-4 group transform transition-all hover:-translate-y-1 duration-300 bg-white/5 border border-white/5 p-5 rounded-2xl backdrop-blur-md">
-          <div class="flex items-center justify-between">
-            <!-- El contenedor se enciende por completo con el color de Despacho en Hover -->
-            <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-xl transition-all duration-300 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:shadow-lg group-hover:shadow-blue-600/30">
-              🛵
-            </div>
-            <span class="text-3xl font-black text-white/10 group-hover:text-blue-500/20 transition-colors tracking-tighter select-none">03</span>
+        <div class="flex items-start gap-4 bg-white/5 border border-white/5 p-4 rounded-2xl backdrop-blur-md group">
+          <div class="w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-lg transition-all duration-300 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:shadow-lg group-hover:shadow-blue-600/20">
+            🛵
           </div>
-          <h4 class="font-black text-sm uppercase tracking-wider text-gray-100 mt-2">3. Recibe en Casa</h4>
-          <p class="text-xs text-gray-400 leading-relaxed">Coordinamos los últimos detalles por el chat. Nosotros nos encargamos del estampado fotorrealista HD de alta resistencia y del flete veloz a nivel nacional.</p>
+          <div class="space-y-1">
+            <h4 class="font-black text-xs uppercase tracking-wider text-gray-100">3. Recibe en Casa</h4>
+            <p class="text-[11px] text-gray-400 leading-relaxed">Coordinamos los últimos detalles por el chat. Nosotros nos encargamos del estampado fotorrealista HD de alta resistencia y del flete veloz a nivel nacional.</p>
+          </div>
         </div>
 
       </div>
